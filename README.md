@@ -8,7 +8,7 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 ### -----------------------------------------------------------------------
 ## How to use:
--  Open the GUI exe ()
+-  Open the GUI exe (dscplus.exe)
 - Go to File -> Open in top left corner, then select the Discord+ theme CSS file for your discord (Vencord/Better Discord, etc)
 - Use **Select Backdrop** in bottom left corner to open dropdown menu so you can swap between existing backdrops
 - Use **Add Backdrop** in bottom right corner to add new backdrops into the file and Backdrop menu
@@ -24,8 +24,8 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 VCDiscPlusGUI is a personal test/passion project not intended for any public use, all credits for Vencord, BetterDiscord and Discord+ theme here:
 
-## [Vencord](https://vencord.dev/)
-## [BetterDiscord](https://betterdiscord.app/)
 ## [Discord+](https://plusinsta.github.io/discord-plus/)
+### [Vencord](https://vencord.dev/)
+### [BetterDiscord](https://betterdiscord.app/)
 
 ### This project is not affiliated with Discord or discord.com in any way.
