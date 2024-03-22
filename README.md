@@ -21,6 +21,9 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 **_Currently has support for Vencord's default file directory, might add others later after checking paths_
 ### -----------------------------------------------------------------------
+## Install:
+Download from src/dist/dscplus_gui.exe or just click [here]()
+### -----------------------------------------------------------------------
 
 VCDiscPlusGUI is a personal test/passion project not intended for any public use, all credits for Vencord, BetterDiscord and Discord+ theme here:
 

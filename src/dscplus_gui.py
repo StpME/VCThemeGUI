@@ -4,6 +4,7 @@ import re
 import os
 
 # ❌WIP: backdrop dropdown and main display list should be ordered the same way so its less confusing
+# ❌WIP: Add gif support to backdrop types
 def open_file():
     init_dir = os.path.join(os.environ['APPDATA'], 'Vencord', 'themes')
     file_path = filedialog.askopenfilename(initialdir=init_dir, filetypes=[("CSS files", "*.css")])
