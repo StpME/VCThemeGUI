@@ -17,7 +17,7 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 **Imgur Demo:**
 (Upload image -> open image in new tab -> copy url for use)
-![](imgur_demo.gif)
+![](src/img/imgur_demo.gif)
 
 **_Currently has support for Vencord's default file directory, might add others later after checking paths_
 ### -----------------------------------------------------------------------
