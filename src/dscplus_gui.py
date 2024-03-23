@@ -2,9 +2,12 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
+# ❌Major WIP: add support for the other values besides backdrop (font, color, size)
+# ❌WIP: Change main window display to preview image or add option to swap between two?
 
 # ❌WIP: backdrop dropdown and main display list should be ordered the same way so its less confusing
 # ❌WIP: Add gif support to backdrop types
+# ❌WIP: Add support for other apps besides vencord (change file paths)
 def open_file():
     init_dir = os.path.join(os.environ['APPDATA'], 'Vencord', 'themes')
     file_path = filedialog.askopenfilename(initialdir=init_dir, filetypes=[("CSS files", "*.css")])
@@ -67,21 +70,14 @@ def set_active_backdrop(selected_url):
             text.insert(tk.END, get_backdrop_section(css_content))
 
 def get_backdrop_section(css_content):
-    dark_backdrops = []
-    light_backdrops = []
+    dark_backdrops = set()
     current_section = None
-    # ❌WIP: need to figure out a simpler way to handle unique backdrops
-    # Currently ignores light backdrops then only displays darks (since both share same backdrops)
     for line in css_content.split("\n"):
         if ".theme-dark" in line:
             current_section = "dark"
-        elif ".theme-light" in line:
-            current_section = "light"
         elif "--dplus-backdrop" in line:
             if current_section == "dark":
-                dark_backdrops.append(line)
-            elif current_section == "light":
-                light_backdrops.append(line)
+                dark_backdrops.add(line)
     return "Backdrop List:\n" + "\n".join(dark_backdrops)
 
 
@@ -89,14 +85,14 @@ def get_backdrop_section(css_content):
 username = os.getlogin()
 
 # Default Vencord file path to css
-css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\DiscordPlus.theme.css"
+# css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\DiscordPlus.theme.css"
 # file path for testing locally
-# css_file_path = f"C:\\Users\\{username}\\Documents\\Projects\\vencordThemeGUI\\src\\test.css"
+css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test.css"
 
 # ❌WIP: The main window should update the display when a backdrop is added
 def add_backdrop_to_css():
     link = backdrop_entry.get()
-    if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg)$', link):
+    if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
         with open(css_file_path, "r") as file:
             css_content = file.readlines()
 
@@ -129,7 +125,7 @@ def add_backdrop_to_css():
             messagebox.showerror("Error", "This link is already present in the list of backdrops.")
     else:
         # Error for invalid links with wrong or missing extension
-        messagebox.showerror("Error", "Please enter a valid URL with a .png, .jpg, or .jpeg extension.")
+        messagebox.showerror("Error", "Please enter a valid URL with a .png, .jpg/jpeg, or .gif extension.")
 
 # Checks line to see if it is already commented out so comments arent appended
 def is_backdrop_commented(line):
