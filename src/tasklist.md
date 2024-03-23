@@ -5,13 +5,17 @@
 ❌Major WIP 2: convert script to OOP format with main function, separate GUI setup and backdrop
 
 ## Minor tasks:
-❌WIP: Change main window display to preview image or add option to swap between two?
+❌WIP: Change main window display to preview image or add option to swap between two? (visual vs text)
 
 ❌WIP: Add delete current url option (+restore last deleted?)
 
 ❌WIP: backdrop dropdown and main display list should be ordered the same way when updating to be less confusing
 
+❌WIP: "Backdrop list:" in main display should be displayed when file is loaded, not after first backdrop selection refresh
+
 ✅: Add gif support to backdrop types
+
+✅: Add demos in readme and polish format
 
 ❌WIP: Add support for other apps besides vencord (change file paths)
 

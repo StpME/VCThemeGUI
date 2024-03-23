@@ -2,9 +2,6 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
-
-
-
 class DSCPlusGUI:
 
     username = os.getlogin()
@@ -22,6 +19,9 @@ class DSCPlusGUI:
     def setup_gui(self):
         self.label = tk.Label(self.root, text="Select Discord+ theme CSS file", font=("Arial", 12))
         self.label.pack()
+        self.sub_label = tk.Label(self.root, text="Default Location: C:\\Users\\*USERNAME*\\AppData\\Roaming\\*MODDEDDISCORD*\\themes", 
+                            font=("Arial", 10))
+        self.sub_label.pack()
 
         self.text = tk.Text(self.root, wrap="word")
         self.text.pack(expand=True, fill="both")
@@ -116,7 +116,7 @@ class DSCPlusGUI:
             elif "--dplus-backdrop" in line:
                 if current_section == "dark":
                     dark_backdrops.add(line)
-        return "Backdrop List:\n" + "\n".join(dark_backdrops)
+        return "Backdrop list:\n" + "\n".join(dark_backdrops)
 
     def add_backdrop_to_css(self):
         link = self.backdrop_entry.get()

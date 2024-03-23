@@ -17,14 +17,17 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 **Imgur Demo:**
 (Upload image -> open image in new tab -> copy url for use)
+
 ![](src/img/imgur_demo.gif)
 
 **GUI Demo:**
+
 ![](src/img/gui_demo_core.gif)
+
 **_Currently has support for Vencord's default file directory, might add others later after checking paths_
 ### -----------------------------------------------------------------------
 ## Install:
-Download from src/dist/dscplus_gui.exe or just click [here](https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/dscplus_gui.exe?raw=true)
+Download from src/dist/dscplus_gui.exe for older stable build or just click [here] for newest version.(https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/dscplus_gui.exe?raw=true)
 ### -----------------------------------------------------------------------
 
 VCDiscPlusGUI is a personal test/passion project not intended for any public use, all credits for Vencord, BetterDiscord and Discord+ theme here:
