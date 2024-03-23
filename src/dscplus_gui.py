@@ -2,12 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
-# ❌Major WIP: add support for the other values besides backdrop (font, color, size)
-# ❌WIP: Change main window display to preview image or add option to swap between two?
 
-# ❌WIP: backdrop dropdown and main display list should be ordered the same way so its less confusing
-# ❌WIP: Add gif support to backdrop types
-# ❌WIP: Add support for other apps besides vencord (change file paths)
 def open_file():
     init_dir = os.path.join(os.environ['APPDATA'], 'Vencord', 'themes')
     file_path = filedialog.askopenfilename(initialdir=init_dir, filetypes=[("CSS files", "*.css")])
@@ -80,18 +75,16 @@ def get_backdrop_section(css_content):
                 dark_backdrops.add(line)
     return "Backdrop List:\n" + "\n".join(dark_backdrops)
 
-
 # Make sure css file name and path is accurate
 username = os.getlogin()
-
 # Default Vencord file path to css
 # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\DiscordPlus.theme.css"
 # file path for testing locally
 css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test.css"
 
-# ❌WIP: The main window should update the display when a backdrop is added
 def add_backdrop_to_css():
     link = backdrop_entry.get()
+    # Regex to enforce extension data types
     if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
         with open(css_file_path, "r") as file:
             css_content = file.readlines()
@@ -137,13 +130,9 @@ def update_css_file():
             lines = file.readlines()
 
         with open(css_file_path, "w") as file:
-            # unique_backdrops_dark = set()
-            # unique_backdrops_light = set()
             for line in lines:
                 # Handles the backdrop theme management
                 if "--dplus-backdrop" in line:
-                    # backdrop_url = line.split("(")[-1].split(")")[0]
-                    # if backdrop_url not in unique_backdrops_dark and backdrop_url not in unique_backdrops_light:
                         if active_backdrop in line:
                             if is_backdrop_commented(line):
                                 file.write(line.replace("/*", "").replace("*/", ""))
@@ -153,18 +142,9 @@ def update_css_file():
                             file.write("/*" + line.strip() + "*/\n")
                         else:
                             file.write(line)
-                        # Add the url to both unique sets
-                        # if ".theme-dark" in line:
-                        #     unique_backdrops_dark.add(backdrop_url)
-                        # elif ".theme-light" in line:
-                        #     unique_backdrops_light.add(backdrop_url)
                 # Writes rest of file
                 else:
                     file.write(line)
-
-
-
-
 
 # Main GUI window
 root = tk.Tk()
