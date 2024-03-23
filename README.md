@@ -8,7 +8,7 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 ### -----------------------------------------------------------------------
 ## How to use:
--  Open the GUI exe (dscplus.exe)
+-  Open the GUI exe (DSCPlus.exe)
 - Go to File -> Open in top left corner, then select the Discord+ theme CSS file for your discord (Vencord/Better Discord, etc)
 - Use **Select Backdrop** in bottom left corner to open dropdown menu so you can swap between existing backdrops
 - Use **Add Backdrop** in bottom right corner to add new backdrops into the file and Backdrop menu

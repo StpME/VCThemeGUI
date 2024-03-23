@@ -11,7 +11,7 @@
 
 ❌WIP: backdrop dropdown and main display list should be ordered the same way when updating to be less confusing
 
-❌WIP: "Backdrop list:" in main display should be displayed when file is loaded, not after first backdrop selection refresh
+✅: "Backdrop list:" in main display should be displayed when file is loaded, not after first backdrop selection refresh
 
 ✅: Add gif support to backdrop types
 
