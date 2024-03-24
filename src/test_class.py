@@ -3,7 +3,7 @@ from tkinter import filedialog, messagebox
 import re
 import os
 class DSCPlusGUI:
-
+    # Grab user name to use for file path
     username = os.getlogin()
     # Default Vencord file path to css
     css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\DiscordPlus.theme.css"
@@ -16,12 +16,12 @@ class DSCPlusGUI:
         
         self.setup_gui()
         self.setup_menu()
-
+    
     def setup_gui(self):
         # GUI main headers
         self.label = tk.Label(self.root, text="Select Discord+ theme CSS file", font=("Arial", 12))
         self.label.pack()
-        self.sub_label = tk.Label(self.root, text="Default Location: C:\\Users\\*USERNAME*\\AppData\\Roaming\\*MODDEDDISCORD*\\themes", 
+        self.sub_label = tk.Label(self.root, text="Default Location: C:\\Users\\"+str(self.username)+"\\AppData\\Roaming\\Vencord\\themes", 
                             font=("Arial", 10))
         self.sub_label.pack()
 

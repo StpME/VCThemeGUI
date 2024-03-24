@@ -4,12 +4,12 @@ This is a simple GUI for editing the CSS for specifically editing the **backdrop
 
 This allows you to more easily store multiple backdrops for the theme and swap between them without having to work within the text css file itself for simpler access.
 
-****This was made for personal Vencord use and I have not tested with BetterDiscord, but the files should be same except maybe for directory locations.**
+****This was made for personal Vencord use and I have not tested with other modded clients, but the css files should be same except for directory locations.**
 
 ### -----------------------------------------------------------------------
 ## How to use:
 -  Open the GUI exe (DSCPlus.exe)
-- Go to File -> Open in top left corner, then select the Discord+ theme CSS file for your discord (Vencord/Better Discord, etc)
+- Go to File -> Open in top left corner, then select the Discord+ theme CSS file for your modded discord.
 - Use **Select Backdrop** in bottom left corner to open dropdown menu so you can swap between existing backdrops
 - Use **Add Backdrop** in bottom right corner to add new backdrops into the file and Backdrop menu
     - Only supports image/gif links with common appropriate extensions (.png, .jpg, .jpeg, .gif)
@@ -24,16 +24,15 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 ![](src/img/gui_demo_core.gif)
 
-**_Currently has support for Vencord's default file directory, might add others later after checking paths_
+**_Currently has support for Vencord's default file directory, others can be found manually_
 ### -----------------------------------------------------------------------
 ## Install:
 Download from src/dist/dscplus_gui.exe for older stable build or just click [here](https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/DSCPlus.exe?raw=true) for newest version.
 ### -----------------------------------------------------------------------
 
-VCDiscPlusGUI is a personal test/passion project not intended for any public use, all credits for Discord+ theme, Vencord and BetterDiscord here:
+VCDiscPlusGUI is a personal test/passion project not intended for any public use, all credits for Discord+ theme and Vencord  here:
 
 ## [Discord+](https://plusinsta.github.io/discord-plus/)
 ### [Vencord](https://vencord.dev/)
-### [BetterDiscord](https://betterdiscord.app/)
 
 ### This project is not affiliated with Discord or discord.com in any way.
