@@ -75,7 +75,9 @@ class SoftXGUI:
             with open(file_path, "r") as file:
                 css_content = file.read()
                 self.text.delete(1.0, tk.END)
-                self.text.insert(tk.END,"Backdrop list:\n")
+                self.text.insert(tk.END,"Backdrop list:\n", "backdrop_label")
+                self.text.tag_configure("backdrop_label", font=("Arial", 12, "bold"))
+
                 self.text.insert(tk.END, SoftXGUI.get_unique_backdrops(self, css_content))
                 backdrop_urls = SoftXGUI.extract_backdrops(self, css_content)
                 unique_backdrops = set(backdrop_urls)
@@ -87,21 +89,24 @@ class SoftXGUI:
         lines = css_text.split("\n")
         for line in lines:
             if "--background-image:" in line:
-                url = line.split("url(")[1].split(")")[0]
-                # Ignore "" in the url for cleaner display
-                if '"' in url:
-                    url = url.strip('"')
-                    backdrop_urls.append(url)
-                else:
-                    backdrop_urls.append(url)
+                url = self.get_clean_url(line)
+                backdrop_urls.append(url)
+
                 
         return backdrop_urls
+    
+    def get_clean_url(self, line):
+        url = line.split("url(")[1].split(")")[0]
+        # Ignore "" in the url for cleaner display
+        if '"' in url:
+            url = url.strip('"')
+        return url
     
     # Create set of unique backdrops from file
     def get_unique_backdrops(self, css_text):
         uniq_backdrops = set()
         for line in css_text.split("\n"):
-            if "--background-image" in line:
+            if "--background-image:" in line:
                 uniq_backdrops.add(line.strip())
         return "\n".join(uniq_backdrops)
 
@@ -137,7 +142,7 @@ class SoftXGUI:
     # Add the backdrop url to the file when button is clicked
     def add_backdrop_to_css(self):
         link = self.backdrop_entry.get()
-        # Regex for valid link extension types
+        # Regex for valid url extension types that aren't empty
         if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
             with open(SoftXGUI.css_file_path, "r") as file:
                 css_content = file.readlines()
@@ -157,7 +162,6 @@ class SoftXGUI:
                         file.write(line)
                         # If at given last backdrop index, insert backdrop below it
                         if i == index_last_backdrop:
-                            
                             file.write(f"/*--background-image: url({link});*/\n")
                     
                 self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))

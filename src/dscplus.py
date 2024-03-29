@@ -75,7 +75,8 @@ class DSCPlusGUI:
             with open(file_path, "r") as file:
                 css_content = file.read()
                 self.text.delete(1.0, tk.END)
-                self.text.insert(tk.END,"Backdrop list:\n")
+                self.text.insert(tk.END,"Backdrop list:\n", "backdrop_label")
+                self.text.tag_configure("backdrop_label", font=("Arial", 12, "bold"))
                 self.text.insert(tk.END, DSCPlusGUI.get_unique_backdrops(self, css_content))
                 backdrop_urls_dark, backdrop_urls_light = DSCPlusGUI.extract_backdrops(self, css_content)
                 unique_backdrops = set(backdrop_urls_dark) | set(backdrop_urls_light)
