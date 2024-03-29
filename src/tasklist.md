@@ -1,8 +1,10 @@
 # Task list
 ## Major tasks:
-❌Major WIP 1: add support for the other values besides backdrop (font, color, size)
+❌Major WIP 1: Add support for the other values besides backdrop (**opacity/alpha**, font, color, size)
 
-❌Major WIP 2: convert script to OOP format with main function, separate GUI setup and backdrop
+☑️Major WIP 2: Convert script to OOP format with main function, separate GUI setup and backdrop
+
+☑️Major WIP 3: Add support for SoftX theme
 
 ## Minor tasks:
 ❌WIP: Change main window display to preview image or add option to swap between two? (visual vs text)
@@ -25,7 +27,8 @@
 
 ❌WIP: Add GUI dark mode
 
+❌WIP: File validation for theme type (check that only dsc+ css file is selected when in dsc gui, etc)
+
+❌WIP: Add Stay on Top option in file menu
+
 ❌WIP: The main window and dropdown should update the display when a backdrop is added OR deleted, currently dropdown only updates when one is added and doesnt delete while main window updates both additions or deletions, but only after selecting new backdrop (add refresh button?)
-
-
-Notes: dcsplus_gui is stable, self-contained barebones build, plan to work with OOP format instead.

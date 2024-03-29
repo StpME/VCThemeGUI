@@ -6,9 +6,9 @@ class DSCPlusGUI:
     # Grab user name to use for file path
     username = os.getlogin()
     # Default Vencord file path to css
-    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\DiscordPlus.theme.css"
+    css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\DiscordPlus.theme.css"
     # file path for testing locally
-    css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test.css"
+    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test.css"
 
     def __init__(self, root):
         self.root = root

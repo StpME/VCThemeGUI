@@ -6,9 +6,9 @@ class SoftXGUI:
     # Grab user name to use for file path
     username = os.getlogin()
     # Default Vencord file path to css
-    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\SoftX.theme.css"
+    css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\SoftX.theme.css"
     # file path for testing locally
-    css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test.css"
+    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test1.css"
 
     def __init__(self, root):
         self.root = root
@@ -87,15 +87,21 @@ class SoftXGUI:
         lines = css_text.split("\n")
         for line in lines:
             if "--background-image:" in line:
-                backdrop_urls.append(line.split("url(")[1].split(")")[0])
-            
+                url = line.split("url(")[1].split(")")[0]
+                # Ignore "" in the url for cleaner display
+                if '"' in url:
+                    url = url.strip('"')
+                    backdrop_urls.append(url)
+                else:
+                    backdrop_urls.append(url)
+                
         return backdrop_urls
     
     # Create set of unique backdrops from file
     def get_unique_backdrops(self, css_text):
         uniq_backdrops = set()
         for line in css_text.split("\n"):
-            if "--background-image:" in line:
+            if "--background-image" in line:
                 uniq_backdrops.add(line.strip())
         return "\n".join(uniq_backdrops)
 
@@ -125,7 +131,6 @@ class SoftXGUI:
         backdrops = set()
         for line in css_content.split("\n"):
             if "--background-image:" in line:
-                
                 backdrops.add(line)
         return "Backdrop list:\n" + "\n".join(backdrops)
 
@@ -137,29 +142,32 @@ class SoftXGUI:
             with open(SoftXGUI.css_file_path, "r") as file:
                 css_content = file.readlines()
 
+            # Get index of the last backdrop
+            index_last_backdrop = len(css_content) - 1
+            for i, line in reversed(list(enumerate(css_content))):
+                if "--background-image:" in line:
+                    index_last_backdrop = i
+                    break
+            
+            # Check if link is present in file
             if not any(f"url({link})" in line for line in css_content):
-                # backdrop_section_dark = -1
-                # backdrop_section_light = -1
-                # for i, line in enumerate(css_content):
-                #     if ".theme-dark" in line:
-                #         backdrop_section_dark = i
-                #     elif ".theme-light" in line:
-                #         backdrop_section_light = i
-
                 with open(SoftXGUI.css_file_path, "w") as file:
-                    for line in enumerate(css_content):
+                    # Write each line of the CSS content
+                    for i, line in enumerate(css_content):
                         file.write(line)
-                        # if i == backdrop_section_dark:
-                        file.write(f"/*--background-image: url({link});*/\n")
-                        # elif i == backdrop_section_light:
-                        #     file.write(f"/*--background-image: url({link});*/\n")
-
+                        # If at given last backdrop index, insert backdrop below it
+                        if i == index_last_backdrop:
+                            
+                            file.write(f"/*--background-image: url({link});*/\n")
+                    
                 self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))
                 self.backdrop_entry.delete(0, tk.END)
             else:
                 messagebox.showerror("Error", "This link is already present in the list of backdrops.")
         else:
             messagebox.showerror("Error", "Please enter a valid URL with a .png, .jpg/jpeg, or .gif extension.")
+
+
 
     # Check if backdrop is already commented to prevent appending additional comments
     def is_backdrop_commented(self, line):
@@ -173,7 +181,13 @@ class SoftXGUI:
 
             with open(SoftXGUI.css_file_path, "w") as file:
                 for line in lines:
-                    if "--background-image:" in line:
+                    # Split line at the semicolon and write only backdrop without initial file comments
+                    if "Background image |" in line:
+                        line = line.split(';')[0].strip() + ';\n'
+                        line = line.strip("/*") # strip leading comment
+                        file.write(line)
+                    # Handle other backdrops normally
+                    elif "--background-image:" in line:
                         if self.active_backdrop in line:
                             if self.is_backdrop_commented(line):
                                 file.write(line.replace("/*", "").replace("*/", ""))

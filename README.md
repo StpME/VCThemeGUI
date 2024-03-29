@@ -9,7 +9,7 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 ### -----------------------------------------------------------------------
 ## How to use:
 -  Open the GUI exe (VCTheme.exe)
-- Go to File -> Open in top left corner, then select the Discord+ theme CSS file for your modded discord.
+- Go to File → Open in top left corner, then select the Discord+ theme CSS file for your modded discord.
 - Use **Select Backdrop** in bottom left corner to open dropdown menu so you can swap between existing backdrops
 - Use **Add Backdrop** in bottom right corner to add new backdrops into the file and Backdrop menu
     - Only supports image/gif links with common appropriate extensions (.png, .jpg, .jpeg, .gif)
