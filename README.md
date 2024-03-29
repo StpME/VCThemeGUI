@@ -1,6 +1,6 @@
-# DSCPlusGUI
+# VCThemeGUI
 
-This is a simple GUI for editing the CSS for specifically editing the **backdrop** of Discord+, a theme for Vencord and BetterDiscord by PlusInsta. It allows you to set the backdrop/background of Discord+ by selecting an existing or added url to an image (.png, .jpg, .jpeg, .gif) from the dropdown instead of going into the file yourself and manually editing or commenting out images.
+This is a simple GUI for editing the CSS for specifically editing the **backdrop** of Discord+ and SoftX, themes for Vencord and BetterDiscord. It allows you to set the backdrop/background of Discord+ by selecting an existing or added url to an image (.png, .jpg, .jpeg, .gif) from the dropdown instead of going into the file yourself and manually editing or commenting out images.
 
 This allows you to more easily store multiple backdrops for the theme and swap between them without having to work within the text css file itself for simpler access.
 
@@ -30,9 +30,11 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 Download from src/dist/dscplus_gui.exe for older stable build or just click [here](https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/DSCPlus.exe?raw=true) for newest version.
 ### -----------------------------------------------------------------------
 
-VCDiscPlusGUI is a personal test/passion project not intended for any public use, all credits for Discord+ theme and Vencord  here:
+VCThemeGUI is a personal test/passion project not intended for any public use, all credits for themes and clients here:
 
 ## [Discord+](https://plusinsta.github.io/discord-plus/)
+## [SoftX](https://betterdiscord.app/theme/SoftX)
 ### [Vencord](https://vencord.dev/)
+### [BetterDiscord](https://betterdiscord.app/)
 
 ### This project is not affiliated with Discord or discord.com in any way.

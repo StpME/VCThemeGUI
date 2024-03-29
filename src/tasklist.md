@@ -21,7 +21,7 @@
 
 ❌WIP: Reducing GUI window size from top or bottom removes the elements, anchor them to top and bottom
 
-❌WIP: Change button elements for better design consistency
+☑️WIP: Change button elements for better design consistency
 
 ❌WIP: Add GUI dark mode
 
