@@ -8,7 +8,7 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 ### -----------------------------------------------------------------------
 ## How to use:
--  Open the GUI exe (DSCPlus.exe)
+-  Open the GUI exe (VCTheme.exe)
 - Go to File -> Open in top left corner, then select the Discord+ theme CSS file for your modded discord.
 - Use **Select Backdrop** in bottom left corner to open dropdown menu so you can swap between existing backdrops
 - Use **Add Backdrop** in bottom right corner to add new backdrops into the file and Backdrop menu
@@ -16,7 +16,7 @@ This allows you to more easily store multiple backdrops for the theme and swap b
          - Can upload a local image to [Imgur](https://imgur.com/upload) or other media sites then open your uploaded image in a new tab and copy that link to be inserted as a backdrop (See GIF example below)
 
 **Imgur Demo:**
-(Upload image -> open image in new tab -> copy url for use)
+(Upload image → open image in new tab → copy url for use)
 
 ![](src/img/imgur_demo.gif)
 
