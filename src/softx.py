@@ -6,9 +6,9 @@ class SoftXGUI:
     # Grab user name to use for file path
     username = os.getlogin()
     # Default Vencord file path to css
-    css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\SoftX.theme.css"
+    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\SoftX.theme.css"
     # file path for testing locally
-    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test1.css"
+    css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test1.css"
 
     def __init__(self, root):
         self.root = root
@@ -56,11 +56,16 @@ class SoftXGUI:
                                 pady=5,
                             )
 
+    def toggle_stay_on_top(self):
+        self.root.attributes("-topmost", not self.root.attributes("-topmost"))
+
     # Create file menu for opening files and closing program
     def setup_menu(self):
         menubar = tk.Menu(self.root)
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="Open", command=self.open_file)
+        filemenu.add_separator()
+        filemenu.add_command(label="Stay on Top", command=self.toggle_stay_on_top)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)

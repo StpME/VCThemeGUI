@@ -29,6 +29,6 @@
 
 ❌WIP: File validation for theme type (check that only dsc+ css file is selected when in dsc gui, etc)
 
-❌WIP: Add Stay on Top option in file menu
+✅: Add Stay on Top option in file menu
 
 ❌WIP: The main window and dropdown should update the display when a backdrop is added OR deleted, currently dropdown only updates when one is added and doesnt delete while main window updates both additions or deletions, but only after selecting new backdrop (add refresh button?)
