@@ -6,9 +6,9 @@ class SoftXGUI:
     # Grab user name to use for file path
     username = os.getlogin()
     # Default Vencord file path to css
-    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\SoftX.theme.css"
+    css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\SoftX.theme.css"
     # file path for testing locally
-    css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test1.css"
+    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test1.css"
 
     def __init__(self, root):
         self.root = root

@@ -2,12 +2,15 @@
 ## Major tasks:
 ❌Major WIP 1: Add support for the other values besides backdrop (**opacity/alpha**, font, color, size)
 
-☑️Major WIP 2: Convert script to OOP format with main function, separate GUI setup and backdrop
+✅Major WIP 2: Convert script to OOP format with main function, separate GUI setup and backdrop
 
 ☑️Major WIP 3: Add support for SoftX theme
 
+❌Major WIP 4: Change main window display to preview image or add option to swap between two? (visual vs text)
+
+❌Major WIP 5: Add GUI dark mode
+
 ## Minor tasks:
-❌WIP: Change main window display to preview image or add option to swap between two? (visual vs text)
 
 ❌WIP: Add delete current url option (+restore last deleted?)
 
@@ -24,8 +27,6 @@
 ❌WIP: Reducing GUI window size from top or bottom removes the elements, anchor them to top and bottom
 
 ☑️WIP: Change button elements for better design consistency
-
-❌WIP: Add GUI dark mode
 
 ❌WIP: File validation for theme type (check that only dsc+ css file is selected when in dsc gui, etc)
 
