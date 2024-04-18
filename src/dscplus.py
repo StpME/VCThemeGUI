@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
+
 class DSCPlusGUI:
     # Grab user name to use for file path
     username = os.getlogin()
@@ -84,8 +85,14 @@ class DSCPlusGUI:
                 self.text.tag_configure("backdrop_label", font=("Arial", 12, "bold"))
                 self.text.insert(tk.END, DSCPlusGUI.get_unique_backdrops(self, css_content))
                 backdrop_urls_dark, backdrop_urls_light = DSCPlusGUI.extract_backdrops(self, css_content)
-                unique_backdrops = set(backdrop_urls_dark) | set(backdrop_urls_light)
-                self.populate_dropdown(unique_backdrops)
+                # unique_backdrops = set(backdrop_urls_dark) | set(backdrop_urls_light)
+                # Check for unique backdrops AND retain sort order using a list
+                combined_backdrops = backdrop_urls_dark + backdrop_urls_light
+                unique_list = []
+                for backdrop in combined_backdrops:
+                    if backdrop not in unique_list:
+                        unique_list.append(backdrop)
+                self.populate_dropdown(unique_list)
 
     # Extract backdrops from file
     def extract_backdrops(self, css_text):
@@ -106,22 +113,23 @@ class DSCPlusGUI:
                     backdrop_urls_light.append(backdrop_url)
         return backdrop_urls_dark, backdrop_urls_light
     
-    # Create set of unique backdrops from file
+    # Create list of unique backdrops directly from file
     def get_unique_backdrops(self, css_text):
-        uniq_backdrops = set()
+        uniq_backdrops = list()
         for line in css_text.split("\n"):
-            if "--dplus-backdrop" in line:
-                uniq_backdrops.add(line.strip())
+            backdrop = line.strip()
+            if "--dplus-backdrop" in line and backdrop not in uniq_backdrops:
+                uniq_backdrops.append(backdrop)
         return "\n".join(uniq_backdrops)
 
-    # Fill in dropdown menu with extracted backdrops
+    # Fill in dropdown menu with extracted urls
     def populate_dropdown(self, backdrop_urls):
         self.backdrop_options.set("")
-        uniq_urls = set()
+        uniq_urls = list()
         for url in backdrop_urls:
             if url not in uniq_urls:
                 self.backdrop_menu['menu'].add_command(label=url, command=lambda u=url: self.set_active_backdrop(u))
-                uniq_urls.add(url)
+                uniq_urls.append(url)
 
     # Set active backdrop based on the selected backdrop in dropdown
     def set_active_backdrop(self, selected_url):
@@ -135,16 +143,16 @@ class DSCPlusGUI:
                 self.text.delete(1.0, tk.END)
                 self.text.insert(tk.END, self.get_backdrop_section(css_content))
 
-    # Find backdrop section within the theme section of the file
+    # Find backdrop section within the theme section of the file (only checks dark theme)
     def get_backdrop_section(self, css_content):
-        dark_backdrops = set()
+        dark_backdrops = list()
         current_section = None
         for line in css_content.split("\n"):
             if ".theme-dark" in line:
                 current_section = "dark"
             elif "--dplus-backdrop" in line:
-                if current_section == "dark":
-                    dark_backdrops.add(line)
+                if current_section == "dark" and line not in dark_backdrops:
+                    dark_backdrops.append(line)
         return "Backdrop list:\n" + "\n".join(dark_backdrops)
 
     # Add the backdrop url to the file when button is clicked
