@@ -166,18 +166,33 @@ class DSCPlusGUI:
             if not any(f"url({link})" in line for line in css_content):
                 backdrop_section_dark = -1
                 backdrop_section_light = -1
+                # First find each theme section
                 for i, line in enumerate(css_content):
                     if ".theme-dark" in line:
                         backdrop_section_dark = i
                     elif ".theme-light" in line:
                         backdrop_section_light = i
 
+                index_last_backdrop_dark = -1
+                index_last_backdrop_light = -1
+                # Determine the index of the last backdrop in the CSS content for each theme
+                for i, line in reversed(list(enumerate(css_content))):
+                    if "--dplus-backdrop" in line and i > backdrop_section_dark and (backdrop_section_light == -1 or i < backdrop_section_light):
+                        index_last_backdrop_dark = i
+                        break
+
+                for i, line in reversed(list(enumerate(css_content))):
+                    if "--dplus-backdrop" in line and i > backdrop_section_light:
+                        index_last_backdrop_light = i
+                        break
+
+                # Write to file
                 with open(DSCPlusGUI.css_file_path, "w") as file:
                     for i, line in enumerate(css_content):
                         file.write(line)
-                        if i == backdrop_section_dark:
+                        if i == index_last_backdrop_dark and backdrop_section_dark != -1:
                             file.write(f"/*--dplus-backdrop: url({link});*/\n")
-                        elif i == backdrop_section_light:
+                        if i == index_last_backdrop_light and backdrop_section_light != -1:
                             file.write(f"/*--dplus-backdrop: url({link});*/\n")
 
                 self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))
@@ -186,6 +201,10 @@ class DSCPlusGUI:
                 messagebox.showerror("Error", "This link is already present in the list of backdrops.")
         else:
             messagebox.showerror("Error", "Please enter a valid URL with a .png, .jpg/jpeg, or .gif extension.")
+
+
+
+
 
     # Check if backdrop is already commented to prevent appending additional comments
     def is_backdrop_commented(self, line):

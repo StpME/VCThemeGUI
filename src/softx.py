@@ -85,8 +85,7 @@ class SoftXGUI:
 
                 self.text.insert(tk.END, SoftXGUI.get_unique_backdrops(self, css_content))
                 backdrop_urls = SoftXGUI.extract_backdrops(self, css_content)
-                unique_backdrops = set(backdrop_urls)
-                self.populate_dropdown(unique_backdrops)
+                self.populate_dropdown(backdrop_urls)
 
     # Extract backdrops from file
     def extract_backdrops(self, css_text):
@@ -95,7 +94,8 @@ class SoftXGUI:
         for line in lines:
             if "--background-image:" in line:
                 url = self.get_clean_url(line)
-                backdrop_urls.append(url)
+                if url not in backdrop_urls:
+                    backdrop_urls.append(url)
 
                 
         return backdrop_urls
@@ -109,20 +109,21 @@ class SoftXGUI:
     
     # Create set of unique backdrops from file
     def get_unique_backdrops(self, css_text):
-        uniq_backdrops = set()
+        uniq_backdrops = list()
         for line in css_text.split("\n"):
-            if "--background-image:" in line:
-                uniq_backdrops.add(line.strip())
+            url = line.strip()
+            if "--background-image:" in line and url not in uniq_backdrops:
+                uniq_backdrops.append(url)
         return "\n".join(uniq_backdrops)
 
     # Fill in dropdown menu with extracted backdrops
     def populate_dropdown(self, backdrop_urls):
         self.backdrop_options.set("")
-        uniq_urls = set()
+        uniq_urls = list()
         for url in backdrop_urls:
             if url not in uniq_urls:
                 self.backdrop_menu['menu'].add_command(label=url, command=lambda u=url: self.set_active_backdrop(u))
-                uniq_urls.add(url)
+                uniq_urls.append(url)
 
     # Set active backdrop based on the selected backdrop in dropdown
     def set_active_backdrop(self, selected_url):
@@ -138,10 +139,10 @@ class SoftXGUI:
 
     # Find backdrop section within the theme section of the file
     def get_backdrop_section(self, css_content):
-        backdrops = set()
+        backdrops = list()
         for line in css_content.split("\n"):
             if "--background-image:" in line:
-                backdrops.add(line)
+                backdrops.append(line)
         return "Backdrop list:\n" + "\n".join(backdrops)
 
     # Add the backdrop url to the file when button is clicked

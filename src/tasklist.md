@@ -2,7 +2,7 @@
 ## Major tasks:
 ❌Major WIP 1: Add support for the other values besides backdrop (**opacity/alpha**, font, color, size)
 
-✅Major WIP 2: Convert script to OOP format with main function, separate GUI setup and backdrop
+☑️Major WIP 2: Convert script to OOP format with main function, put dropdown and window management in 
 
 ☑️Major WIP 3: Add support for SoftX theme
 
@@ -14,7 +14,7 @@
 
 ❌WIP: Add delete current url option (+restore last deleted?)
 
-☑️WIP: backdrop dropdown and main display list should be ordered the same way when updating to be less confusing (now needs same order when adding new backdrops to list and to be adapted for SoftX)
+✅WIP: backdrop dropdown and main display list should be ordered the same way when updating to be less confusing 
 
 ✅: "Backdrop list:" in main display should be displayed when file is loaded, not after first backdrop selection refresh
 
