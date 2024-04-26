@@ -22,6 +22,8 @@
 
 ✅: Add demos in readme and polish format
 
+❌WIP: Add folder support, where choosing a folder will populate dropdown with all valid urls
+
 ❌WIP: Add support for other apps besides vencord (change file paths)
 
 ❌WIP: Reducing GUI window size from top or bottom removes the elements, anchor them to top and bottom
