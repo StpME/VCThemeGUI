@@ -6,7 +6,7 @@
 
 ☑️Major WIP 3: Add support for SoftX theme
 
-❌Major WIP 4: Change main window display to preview image or add option to swap between two? (visual vs text)
+☑️Major WIP 4: Change main window display to preview image
 
 ❌Major WIP 5: Add GUI dark mode
 
@@ -21,8 +21,6 @@
 ✅: Add gif support to backdrop types
 
 ✅: Add demos in readme and polish format
-
-❌WIP: Add support for other apps besides vencord (change file paths)
 
 ❌WIP: Reducing GUI window size from top or bottom removes the elements, anchor them to top and bottom
 

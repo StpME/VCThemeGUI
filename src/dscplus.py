@@ -3,13 +3,13 @@ from tkinter import filedialog, messagebox
 import re
 import os
 from setup import Setup
+from img_preview import ImagePreview
+
 class DSCPlusGUI:
     # Grab user name to use for file path
     username = os.getlogin()
     # Default Vencord file path to css
     css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\DiscordPlus.theme.css"
-    # file path for testing locally
-    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test.css"
 
     def __init__(self, root):
         self.root = root
@@ -17,7 +17,14 @@ class DSCPlusGUI:
         self.Setup = Setup
         self.Setup.setup_gui(self, "Discord+")
         self.setup_menu()
-    
+
+        # Remove the existing text widget (used for raw URLs, needs more testing) 
+        self.text.destroy() 
+
+        # Create a new frame for the image grid
+        self.img_grid_frame = tk.Frame(self.root)
+        self.img_grid_frame.pack(fill="both", expand=True)
+
     # Toggle window stay on top
     def toggle_stay_on_top(self):
         self.root.attributes("-topmost", not self.root.attributes("-topmost"))
@@ -42,18 +49,18 @@ class DSCPlusGUI:
             self.backdrop_options = tk.StringVar(value="Select Backdrop")
             with open(file_path, "r") as file:
                 css_content = file.read()
-                self.text.delete(1.0, tk.END)
-                self.text.insert(tk.END,"Backdrop list:\n", "backdrop_label")
-                self.text.tag_configure("backdrop_label", font=("Arial", 12, "bold"))
-                self.text.insert(tk.END, DSCPlusGUI.get_unique_backdrops(self, css_content))
-                backdrop_urls_dark, backdrop_urls_light = DSCPlusGUI.extract_backdrops(self, css_content)
-                # unique_backdrops = set(backdrop_urls_dark) | set(backdrop_urls_light)
-                # Check for unique backdrops AND retain sort order using a list
+                # Extract image URLs from the CSS
+                img_urls = ImagePreview.extract_img_urls(css_content)
+                
+                # Clear the existing image grid
+                for widget in self.img_grid_frame.winfo_children():
+                    widget.destroy()
+                
+                # Display the image grid
+                ImagePreview(self.img_grid_frame, img_urls)
+                backdrop_urls_dark, backdrop_urls_light = self.extract_backdrops(css_content)
                 combined_backdrops = backdrop_urls_dark + backdrop_urls_light
-                unique_list = []
-                for backdrop in combined_backdrops:
-                    if backdrop not in unique_list:
-                        unique_list.append(backdrop)
+                unique_list = list(dict.fromkeys(combined_backdrops))
                 self.populate_dropdown(unique_list)
 
     # Extract backdrops from file
@@ -164,11 +171,7 @@ class DSCPlusGUI:
         else:
             messagebox.showerror("Error", "Please enter a valid URL with a .png, .jpg/jpeg, or .gif extension.")
 
-
-
-
-
-    # Check if backdrop is already commented to prevent appending additional comments
+    # Check if backdrop is already commented out to prevent appending additional comments
     def is_backdrop_commented(self, line):
         return line.strip().startswith("/*") and line.strip().endswith("*/")
 
