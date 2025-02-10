@@ -2,63 +2,42 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
+import webbrowser
+from setup import Setup
+from img_preview import ImagePreview
+from PIL import Image, ImageTk
 
 class DSCPlusGUI:
     # Grab user name to use for file path
     username = os.getlogin()
     # Default Vencord file path to css
     css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\DiscordPlus.theme.css"
-    # file path for testing locally
-    # css_file_path = f"C:\\Users\\{username}\\AppData\\Roaming\\Vencord\\themes\\test.css"
 
     def __init__(self, root):
         self.root = root
-        self.root.title("DSCPlus")
-        
-        self.setup_gui()
+        self.root.title("VCTheme - DSCPlus")
+        self.Setup = Setup
+        self.Setup.setup_gui(self, "Discord+")
         self.setup_menu()
-    
-    def setup_gui(self):
-        # GUI main headers
-        self.label = tk.Label(self.root, text="Select Discord+ theme CSS file", font=("Arial", 12))
-        self.label.pack()
-        self.sub_label = tk.Label(self.root, text="Default Location: C:\\Users\\"+str(self.username)+"\\AppData\\Roaming\\Vencord\\themes", 
-                            font=("Arial", 10))
-        self.sub_label.pack()
 
-        # Text shown for main window
-        self.text = tk.Text(self.root, wrap="word")
-        self.text.pack(expand=True, fill="both")
-        
-        # Dropdown menu
-        self.backdrop_options = tk.StringVar(value="Select Backdrop")
-        self.backdrop_menu = tk.OptionMenu(self.root, 
-                                                self.backdrop_options,
-                                                "Select Below"
-                                            )
-        self.backdrop_menu.pack(side=tk.LEFT,
-                                    padx=5,
-                                    pady=2,
-                                    )
+        # Remove the existing text widget
+        self.text.destroy() 
 
-        self.backdrop_menu_label = tk.Label(self.root, text="", font=("Arial", 12))
-        self.backdrop_menu_label.pack(side=tk.LEFT)
+        # Create a new frame for the image grid
+        self.img_grid_frame = tk.Frame(self.root)
+        self.img_grid_frame.pack(fill="both", expand=True)
 
-        self.backdrop_entry = tk.Entry(self.root, width=50)
-        self.backdrop_entry.pack(side=tk.RIGHT, padx=5, pady=5)
+        # Initialize the ImagePreview instance as None
+        self.image_preview_instance = None
 
-        # Add backdrop button
-        self.add_backdrop_btn = tk.Button(self.root, text="Add Backdrop", 
-                                        command=self.add_backdrop_to_css,
-                                        bd=3 # Border width
-                                    )
-        self.add_backdrop_btn.pack(side=tk.RIGHT,
-                                padx=5,
-                                pady=5,
-                            )
     # Toggle window stay on top
     def toggle_stay_on_top(self):
         self.root.attributes("-topmost", not self.root.attributes("-topmost"))
+
+    # Link to project Github page
+    def open_github(self):
+        webbrowser.open_new("https://github.com/StpME/VCThemeGUI")
+
 
     # Create file menu for opening files and closing program
     def setup_menu(self):
@@ -67,6 +46,12 @@ class DSCPlusGUI:
         filemenu.add_command(label="Open", command=self.open_file)
         filemenu.add_separator()
         filemenu.add_command(label="Stay on Top", command=self.toggle_stay_on_top)
+        filemenu.add_separator()
+
+        github_img = Image.open("src/img/github_icon.png").resize((16,16), Image.Resampling.LANCZOS)
+        self.github_icon = ImageTk.PhotoImage(github_img)
+        filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=self.open_github)
+        
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
@@ -80,18 +65,19 @@ class DSCPlusGUI:
             self.backdrop_options = tk.StringVar(value="Select Backdrop")
             with open(file_path, "r") as file:
                 css_content = file.read()
-                self.text.delete(1.0, tk.END)
-                self.text.insert(tk.END,"Backdrop list:\n", "backdrop_label")
-                self.text.tag_configure("backdrop_label", font=("Arial", 12, "bold"))
-                self.text.insert(tk.END, DSCPlusGUI.get_unique_backdrops(self, css_content))
-                backdrop_urls_dark, backdrop_urls_light = DSCPlusGUI.extract_backdrops(self, css_content)
-                # unique_backdrops = set(backdrop_urls_dark) | set(backdrop_urls_light)
-                # Check for unique backdrops AND retain sort order using a list
+                # Extract image URLs from the CSS
+                img_urls = ImagePreview.extract_img_urls(css_content)
+                
+                # Clear the existing image grid
+                for widget in self.img_grid_frame.winfo_children():
+                    widget.destroy()
+                
+                # Create and store the ImagePreview instance
+                self.image_preview_instance = ImagePreview(self.img_grid_frame, img_urls)
+
+                backdrop_urls_dark, backdrop_urls_light = self.extract_backdrops(css_content)
                 combined_backdrops = backdrop_urls_dark + backdrop_urls_light
-                unique_list = []
-                for backdrop in combined_backdrops:
-                    if backdrop not in unique_list:
-                        unique_list.append(backdrop)
+                unique_list = list(dict.fromkeys(combined_backdrops))
                 self.populate_dropdown(unique_list)
 
     # Extract backdrops from file
@@ -134,7 +120,7 @@ class DSCPlusGUI:
     # Set active backdrop based on the selected backdrop in dropdown
     def set_active_backdrop(self, selected_url):
         self.active_backdrop = selected_url
-        self.backdrop_menu_label.config(text=selected_url)
+        # self.backdrop_menu_label.config(text=selected_url)
         self.update_css_file()
 
         if self.text and os.path.exists(self.css_file_path):
@@ -158,7 +144,6 @@ class DSCPlusGUI:
     # Add the backdrop url to the file when button is clicked
     def add_backdrop_to_css(self):
         link = self.backdrop_entry.get()
-        # Regex for valid link extension types
         if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
             with open(DSCPlusGUI.css_file_path, "r") as file:
                 css_content = file.readlines()
@@ -166,7 +151,6 @@ class DSCPlusGUI:
             if not any(f"url({link})" in line for line in css_content):
                 backdrop_section_dark = -1
                 backdrop_section_light = -1
-                # First find each theme section
                 for i, line in enumerate(css_content):
                     if ".theme-dark" in line:
                         backdrop_section_dark = i
@@ -175,7 +159,6 @@ class DSCPlusGUI:
 
                 index_last_backdrop_dark = -1
                 index_last_backdrop_light = -1
-                # Determine the index of the last backdrop in the CSS content for each theme
                 for i, line in reversed(list(enumerate(css_content))):
                     if "--dplus-backdrop" in line and i > backdrop_section_dark and (backdrop_section_light == -1 or i < backdrop_section_light):
                         index_last_backdrop_dark = i
@@ -186,7 +169,6 @@ class DSCPlusGUI:
                         index_last_backdrop_light = i
                         break
 
-                # Write to file
                 with open(DSCPlusGUI.css_file_path, "w") as file:
                     for i, line in enumerate(css_content):
                         file.write(line)
@@ -197,16 +179,13 @@ class DSCPlusGUI:
 
                 self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))
                 self.backdrop_entry.delete(0, tk.END)
+                self.update_image_previews()
             else:
                 messagebox.showerror("Error", "This link is already present in the list of backdrops.")
         else:
             messagebox.showerror("Error", "Please enter a valid URL with a .png, .jpg/jpeg, or .gif extension.")
 
-
-
-
-
-    # Check if backdrop is already commented to prevent appending additional comments
+    # Check if backdrop is already commented out to prevent appending additional comments
     def is_backdrop_commented(self, line):
         return line.strip().startswith("/*") and line.strip().endswith("*/")
 
@@ -230,3 +209,13 @@ class DSCPlusGUI:
                             file.write(line)
                     else:
                         file.write(line)
+            # self.update_image_previews()
+
+    # Update the image previews when adding new backdrop
+    def update_image_previews(self):
+        if self.image_preview_instance:
+            with open(self.css_file_path, "r") as file:
+                css_content = file.read()
+                img_urls = ImagePreview.extract_img_urls(css_content)
+                self.image_preview_instance.img_urls = img_urls
+                self.image_preview_instance.load_imgs()

@@ -11,7 +11,9 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+tasklist.md
 .Python
+dist/
 build/
 develop-eggs/
 downloads/
