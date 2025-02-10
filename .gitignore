@@ -13,7 +13,6 @@ __pycache__/
 # Distribution / packaging
 tasklist.md
 .Python
-img/
 dist/
 build/
 develop-eggs/
