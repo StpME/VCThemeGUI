@@ -61,17 +61,12 @@ class ImagePreview:
 
                     # Check if the response contains valid image data
                     if "image" in response.headers.get("Content-Type", ""):
-                        
-                        
-
                         # Load the image using Pillow/PIL
                         img_data = response.content
                         img = Image.open(BytesIO(img_data))
                         img.thumbnail((150, 150))  # Resize the image to fit in the grid
-
                         # Convert the the PIL image to Tkinter
                         tk_img = ImageTk.PhotoImage(img)
-
                         # Create a label to display the image
                         img_label = tk.Label(self.scrollable_frame, image=tk_img)
                         img_label.img = tk_img
