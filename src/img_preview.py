@@ -27,6 +27,9 @@ class ImagePreview:
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
+        # Bind the mouse scroll wheel to canvas to scroll images
+        self.canvas.bind_all("<MouseWheel>", self.on_mouse_wheel)
+        
         # Load and display images
         self.load_imgs()
 
@@ -115,3 +118,7 @@ class ImagePreview:
     
     def update_scrollregion(self, event=None):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+    
+    # Handle mouse wheel for scroll events (scroll images given sufficient count)
+    def on_mouse_wheel(self, event):
+        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
