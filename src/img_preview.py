@@ -10,15 +10,16 @@ class ImagePreview:
         self.img_urls = img_urls
         self.img_labels = []
 
+        # Create main frame that holds canvas and scrollbar so previews are loaded flexibly
+        main_frame = tk.Frame(root)
+        main_frame.pack(fill="both", expand=True)
+                        
         # Canvas and scrollbar for image grid
-        self.canvas = tk.Canvas(root)
-        self.scrollbar = ttk.Scrollbar(root, orient="vertical", command=self.canvas.yview)
+        self.canvas = tk.Canvas(main_frame)
+        self.scrollbar = ttk.Scrollbar(main_frame, orient="vertical", command=self.canvas.yview)
         self.scrollable_frame = ttk.Frame(self.canvas)
 
-        self.scrollable_frame.bind(
-            "<Configure>",
-            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-        )
+        self.scrollable_frame.bind("<Configure>", self.update_scrollregion)
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
@@ -28,12 +29,15 @@ class ImagePreview:
         # Load and display images
         self.load_imgs()
 
+        # Bind resize event to adjust window layout with images
+        root.bind("<Configure>", self.on_resize)
+
     # Checks for valid extensions on image urls so they can be displayed
     def is_valid_img_url(self, url):
         valid_extensions = [".gif", ".png", ".jpg", ".jpeg", ".bmp", ".webp"]
         return any(url.lower().endswith(ext) for ext in valid_extensions)
 
-    # Loads images, skipping invalid or broken urls
+    # Loads images, checking and skipping invalid or broken urls
     def load_imgs(self):
         for i, url in enumerate(self.img_urls):
             try:
@@ -43,7 +47,6 @@ class ImagePreview:
                     continue
 
                 # Add headers to mimic a PC browser request so images can be properly displayed
-                #  (may need extra testing)
                 # Imgur and other sites may block site requests without valid User-Agents
                 headers = {
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/91.0.4472.124 Safari/537.36"
@@ -75,6 +78,10 @@ class ImagePreview:
             except (requests.RequestException, UnidentifiedImageError) as e:
                 print(f"Failed to load image from {url}: {e}")
 
+        # Resize image previews after loaded for first time
+        self.on_resize(None)
+        self.update_scrollregion()
+
     # Helper method to extract urls within the class
     def extract_img_urls(css_content):
         img_urls = []
@@ -84,3 +91,16 @@ class ImagePreview:
                 url = line.split("url(")[1].split(")")[0]
                 img_urls.append(url)
         return img_urls
+    
+    # 
+    def on_resize(self, event):
+        for i, img_label in enumerate(self.img_labels):
+            img_label.grid(row=i // self.get_num_columns(), column=i % self.get_num_columns(), padx=5, pady=5)
+        self.update_scrollregion()
+
+    # Helper method to calculate num columns based on current width
+    def get_num_columns(self):
+        return max(1, self.root.winfo_width() // 160) 
+    
+    def update_scrollregion(self, event=None):
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
