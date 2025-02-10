@@ -36,7 +36,18 @@ class Setup:
                                         bd=3 # Border width
                                     )
         self.add_backdrop_btn.pack(side=tk.LEFT, padx=5, pady=5)
-        
+
         # Backdrop entry/input box
         self.backdrop_entry = tk.Entry(self.bottom_frame, width=50)
-        self.backdrop_entry.pack(side=tk.LEFT, padx=5, pady=5, expand=True, fill=tk.X)
+        self.backdrop_entry.pack(side=tk.LEFT, padx=5, pady=5)
+
+        # Calculate and set the entry box width to 75% of the window width
+        def set_entry_width(event=None):
+            window_width = self.root.winfo_width()
+            entry_width = int(window_width * 0.75) // 9
+            self.backdrop_entry.config(width = entry_width)
+
+        # Bind the function to window resize event for dynamic adjustments
+        self.root.bind("<Configure>", set_entry_width)
+
+        set_entry_width()

@@ -114,7 +114,7 @@ class DSCPlusGUI:
     # Set active backdrop based on the selected backdrop in dropdown
     def set_active_backdrop(self, selected_url):
         self.active_backdrop = selected_url
-        self.backdrop_menu_label.config(text=selected_url)
+        # self.backdrop_menu_label.config(text=selected_url)
         self.update_css_file()
 
         if self.text and os.path.exists(self.css_file_path):
@@ -203,7 +203,7 @@ class DSCPlusGUI:
                             file.write(line)
                     else:
                         file.write(line)
-            self.update_image_previews()
+            # self.update_image_previews()
 
     # Update the image previews when adding new backdrop
     def update_image_previews(self):
