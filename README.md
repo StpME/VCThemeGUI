@@ -27,9 +27,9 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 **_Currently has support for Vencord's default file directory, others can be found manually_
 ### -----------------------------------------------------------------------
 ## Install:
-Download the current build from src/dist/VCTheme.exe or click **[here](https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/VCTheme.exe?raw=true)** for newest version.
+Download the current build **[here](https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/VCTheme.exe?raw=true)**.
 
-Download the initial stable build for Discord+ from src/stable/dscplus_gui(OLD).exe or click **[here](https://github.com/StpME/VCThemeGUI/blob/main/src/stable/dscplus_gui(OLD).exe?raw=true)**.
+Download the test build for Discord+ **[here](https://github.com/StpME/VCThemeGUI/blob/test/src/dist/VCTheme_test.exe?raw=true)**.
 ### -----------------------------------------------------------------------
 
 VCThemeGUI is a personal test/passion project not intended for any public use, all credits for themes and clients here:
