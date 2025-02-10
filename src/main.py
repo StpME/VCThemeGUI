@@ -34,8 +34,8 @@ class GUISelector:
         self.root.destroy()
         root = tk.Tk()
 
-        width_base = 800  # You can adjust this as needed
-        height_base = 500  # You can adjust this as needed
+        width_base = 900 
+        height_base = 500
         width_window = root.winfo_screenwidth()
         height_window = root.winfo_screenheight()
 

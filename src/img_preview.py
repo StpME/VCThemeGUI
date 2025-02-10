@@ -9,6 +9,7 @@ class ImagePreview:
         self.root = root
         self.img_urls = img_urls
         self.img_labels = []
+        self.loaded_urls = set()
 
         # Create main frame that holds canvas and scrollbar so previews are loaded flexibly
         main_frame = tk.Frame(root)
@@ -39,50 +40,65 @@ class ImagePreview:
 
     # Loads images, checking and skipping invalid or broken urls
     def load_imgs(self):
+        self.clear_existing_images()
         for i, url in enumerate(self.img_urls):
-            try:
-                # Skip invalid URLs
-                if not self.is_valid_img_url(url):
-                    print(f"Skipping invalid image URL: {url}")
-                    continue
+            if url not in self.loaded_urls:
+                try:
+                    # Skip invalid URLs
+                    if not self.is_valid_img_url(url):
+                        print(f"Skipping invalid image URL: {url}")
+                        continue
 
-                # Add headers to mimic a PC browser request so images can be properly displayed
-                # Imgur and other sites may block site requests without valid User-Agents
-                headers = {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/91.0.4472.124 Safari/537.36"
-                } # This is emulating a Chrome user on Windows 10 with compatibility
+                    # Add headers to mimic a PC browser request so images can be properly displayed
+                    # Imgur and other sites may block site requests without valid User-Agents
+                    headers = {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/91.0.4472.124 Safari/537.36"
+                    } # This is emulating a Chrome user on Windows 10 with compatibility
 
-                # Fetch the image from the URL and check validity/status
-                response = requests.get(url, headers=headers)
-                response.raise_for_status()  
+                    # Fetch the image from the URL and check validity/status
+                    response = requests.get(url, headers=headers)
+                    response.raise_for_status()  
 
-                # Check if the response contains valid image data
-                if "image" not in response.headers.get("Content-Type", ""):
-                    print(f"Skipping non-image URL: {url}")
-                    continue
+                    # Check if the response contains valid image data
+                    if "image" in response.headers.get("Content-Type", ""):
+                        
+                        
 
-                # Load the image using Pillow/PIL
-                img_data = response.content
-                img = Image.open(BytesIO(img_data))
-                img.thumbnail((150, 150))  # Resize the image to fit in the grid
+                        # Load the image using Pillow/PIL
+                        img_data = response.content
+                        img = Image.open(BytesIO(img_data))
+                        img.thumbnail((150, 150))  # Resize the image to fit in the grid
 
-                # Convert the the PIL image to Tkinter
-                tk_img = ImageTk.PhotoImage(img)
+                        # Convert the the PIL image to Tkinter
+                        tk_img = ImageTk.PhotoImage(img)
 
-                # Create a label to display the image
-                img_label = tk.Label(self.scrollable_frame, image=tk_img)
-                img_label.img = tk_img
-                # Three columns per row (plan to make flex-auto)
-                img_label.grid(row = i // 3, column = i % 3, padx = 5, pady = 5) 
-                self.img_labels.append(img_label)
-            except (requests.RequestException, UnidentifiedImageError) as e:
-                print(f"Failed to load image from {url}: {e}")
+                        # Create a label to display the image
+                        img_label = tk.Label(self.scrollable_frame, image=tk_img)
+                        img_label.img = tk_img
+                        # Three columns per row (plan to make flex-auto)
+                        img_label.grid(row = i // 3, column = i % 3, padx = 5, pady = 5) 
+                        self.img_labels.append(img_label)
+                        self.loaded_urls.add(url)  # Add URL to loaded URLs set
+                        print(f"Loaded image {url} at row {i // self.get_num_columns()} and column {i % self.get_num_columns()}")
+                    else: 
+                        print(f"Skipping non-image URL: {url}")
+                except (requests.RequestException, UnidentifiedImageError) as e:
+                    print(f"Failed to load image from {url}: {e}")
 
         # Resize image previews after loaded for first time
         self.on_resize(None)
         self.update_scrollregion()
 
+    # Clears images to avoid duped previews
+    def clear_existing_images(self):
+        for img_label in self.img_labels:
+            img_label.grid_forget()
+        self.img_labels = []
+        self.loaded_urls = set() 
+        print("Cleared existing images")
+
     # Helper method to extract urls within the class
+    # *can't import method as they need sorted backdrops as a list instead of set
     def extract_img_urls(css_content):
         img_urls = []
         for line in css_content.split("\n"):
@@ -92,7 +108,7 @@ class ImagePreview:
                 img_urls.append(url)
         return img_urls
     
-    # 
+    # Update rows and cols and scrollbar region on dimension change event
     def on_resize(self, event):
         for i, img_label in enumerate(self.img_labels):
             img_label.grid(row=i // self.get_num_columns(), column=i % self.get_num_columns(), padx=5, pady=5)
