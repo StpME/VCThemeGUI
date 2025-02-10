@@ -32,8 +32,9 @@ Download the current build **[here](https://github.com/StpME/DSCPlusGUI/blob/mai
 Download the test build for Discord+ **[here](https://github.com/StpME/VCThemeGUI/blob/test/src/dist/VCTheme_test.exe?raw=true)**.
 ### -----------------------------------------------------------------------
 
-VCThemeGUI is a personal test/passion project not intended for any public use, all credits for themes and clients here:
+VCThemeGUI is a personal test/passion project not intended for any public or commercial use, all credits for themes and clients here:
 
+# [Discord](https://discord.com/download)
 ## [Discord+](https://plusinsta.github.io/discord-plus/)
 ## [SoftX](https://betterdiscord.app/theme/SoftX)
 ### [Vencord](https://vencord.dev/)
