@@ -25,6 +25,9 @@ class DSCPlusGUI:
         self.img_grid_frame = tk.Frame(self.root)
         self.img_grid_frame.pack(fill="both", expand=True)
 
+        # Initialize the ImagePreview instance as None
+        self.image_preview_instance = None
+
     # Toggle window stay on top
     def toggle_stay_on_top(self):
         self.root.attributes("-topmost", not self.root.attributes("-topmost"))
@@ -56,8 +59,9 @@ class DSCPlusGUI:
                 for widget in self.img_grid_frame.winfo_children():
                     widget.destroy()
                 
-                # Display the image grid
-                ImagePreview(self.img_grid_frame, img_urls)
+                # Create and store the ImagePreview instance
+                self.image_preview_instance = ImagePreview(self.img_grid_frame, img_urls)
+
                 backdrop_urls_dark, backdrop_urls_light = self.extract_backdrops(css_content)
                 combined_backdrops = backdrop_urls_dark + backdrop_urls_light
                 unique_list = list(dict.fromkeys(combined_backdrops))
@@ -127,7 +131,6 @@ class DSCPlusGUI:
     # Add the backdrop url to the file when button is clicked
     def add_backdrop_to_css(self):
         link = self.backdrop_entry.get()
-        # Regex for valid link extension types
         if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
             with open(DSCPlusGUI.css_file_path, "r") as file:
                 css_content = file.readlines()
@@ -135,7 +138,6 @@ class DSCPlusGUI:
             if not any(f"url({link})" in line for line in css_content):
                 backdrop_section_dark = -1
                 backdrop_section_light = -1
-                # First find each theme section
                 for i, line in enumerate(css_content):
                     if ".theme-dark" in line:
                         backdrop_section_dark = i
@@ -144,7 +146,6 @@ class DSCPlusGUI:
 
                 index_last_backdrop_dark = -1
                 index_last_backdrop_light = -1
-                # Determine the index of the last backdrop in the CSS content for each theme
                 for i, line in reversed(list(enumerate(css_content))):
                     if "--dplus-backdrop" in line and i > backdrop_section_dark and (backdrop_section_light == -1 or i < backdrop_section_light):
                         index_last_backdrop_dark = i
@@ -155,7 +156,6 @@ class DSCPlusGUI:
                         index_last_backdrop_light = i
                         break
 
-                # Write to file
                 with open(DSCPlusGUI.css_file_path, "w") as file:
                     for i, line in enumerate(css_content):
                         file.write(line)
@@ -166,6 +166,7 @@ class DSCPlusGUI:
 
                 self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))
                 self.backdrop_entry.delete(0, tk.END)
+                self.update_image_previews()
             else:
                 messagebox.showerror("Error", "This link is already present in the list of backdrops.")
         else:
@@ -195,3 +196,13 @@ class DSCPlusGUI:
                             file.write(line)
                     else:
                         file.write(line)
+            self.update_image_previews()
+
+    # Update the image previews when adding new backdrop
+    def update_image_previews(self):
+        if self.image_preview_instance:
+            with open(self.css_file_path, "r") as file:
+                css_content = file.read()
+                img_urls = ImagePreview.extract_img_urls(css_content)
+                self.image_preview_instance.img_urls = img_urls
+                self.image_preview_instance.load_imgs()

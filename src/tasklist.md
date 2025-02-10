@@ -8,7 +8,9 @@
 
 ☑️Major WIP 4: Change main window display to preview image
 
-❌Major WIP 5: Add GUI dark mode
+❌Major WIP 5: Add refresh button
+
+❌Major WIP 6: Add GUI dark mode
 
 ## Minor tasks:
 
@@ -22,7 +24,7 @@
 
 ✅: Add demos in readme and polish format
 
-❌WIP: Reducing GUI window size from top or bottom removes the elements, anchor them to top and bottom
+❌WIP: Reducing GUI window size from top or bottom removes the elements, anchor them to top and bottom - **set a minimum window size**
 
 ☑️WIP: Change button elements for better design consistency
 
@@ -32,7 +34,7 @@
 
 ✅: Add Stay on Top option in file menu
 
-❌WIP: The main window and dropdown should update the display when a backdrop is added OR deleted, currently dropdown only updates when one is added and doesnt delete while main window updates both additions or deletions, but only after selecting new backdrop (add refresh button?)
+❌WIP: The main window and dropdown should update the display when a backdrop is added OR deleted, currently dropdown only updates when one is added and doesnt delete while main window updates both additions or deletions, but only after selecting new backdrop
 
 
 ❌ = Not yet implemented
