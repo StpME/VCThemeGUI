@@ -11,7 +11,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-tasklist.md
+src/tasklist.md
 .Python
 dist/
 build/
