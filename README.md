@@ -1,6 +1,6 @@
 # VCThemeGUI
 
-This is a simple GUI for editing the CSS for specifically editing the **backdrop** of Discord+ and SoftX, themes for Vencord and BetterDiscord. It allows you to set the background Discord theme by selecting an existing or added url to an image (.png, .jpg, .jpeg, .gif) from the dropdown instead of going into the file yourself and manually editing or commenting out images.
+This is a simple GUI for editing the CSS for specifically editing the **backdrop** of Discord+ and SoftX, themes for Vencord and BetterDiscord. It allows you to set the backdrop/background of Discord+ by selecting an existing or added url to an image (.png, .jpg, .jpeg, .gif) from the dropdown instead of going into the file yourself and manually editing or commenting out images.
 
 This allows you to more easily store multiple backdrops for the theme and swap between them without having to work within the text css file itself for simpler access.
 
@@ -27,9 +27,9 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 **_Currently has support for Vencord's default file directory, others can be found manually_
 ### -----------------------------------------------------------------------
 ## Install:
-Download the current build from src/dist/VCTheme.exe or click **[here](https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/VCTheme.exe?raw=true)** for newest version.
+Download the current build **[here](https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/VCTheme.exe?raw=true)**.
 
-Download the initial stable build for Discord+ from src/stable/dscplus_gui(OLD).exe or click **[here](https://github.com/StpME/VCThemeGUI/blob/main/src/stable/dscplus_gui(OLD).exe?raw=true)**.
+Download the test build for Discord+ **[here](https://github.com/StpME/VCThemeGUI/blob/test/src/dist/VCTheme_test.exe?raw=true)**.
 ### -----------------------------------------------------------------------
 
 VCThemeGUI is a personal test/passion project not intended for any public use, all credits for themes and clients here:
