@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
+import webbrowser
 from setup import Setup
 from img_preview import ImagePreview
 
@@ -18,7 +19,7 @@ class DSCPlusGUI:
         self.Setup.setup_gui(self, "Discord+")
         self.setup_menu()
 
-        # Remove the existing text widget (used for raw URLs, needs more testing) 
+        # Remove the existing text widget
         self.text.destroy() 
 
         # Create a new frame for the image grid
@@ -32,6 +33,10 @@ class DSCPlusGUI:
     def toggle_stay_on_top(self):
         self.root.attributes("-topmost", not self.root.attributes("-topmost"))
 
+    # Link to project Github page
+    def open_github(self):
+        webbrowser.open_new("https://github.com/StpME/VCThemeGUI")
+
     # Create file menu for opening files and closing program
     def setup_menu(self):
         menubar = tk.Menu(self.root)
@@ -39,6 +44,8 @@ class DSCPlusGUI:
         filemenu.add_command(label="Open", command=self.open_file)
         filemenu.add_separator()
         filemenu.add_command(label="Stay on Top", command=self.toggle_stay_on_top)
+        filemenu.add_separator()
+        filemenu.add_command(label="Github", command=self.open_github)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
