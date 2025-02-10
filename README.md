@@ -30,6 +30,10 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 Download the current build **[here](https://github.com/StpME/DSCPlusGUI/blob/main/src/dist/VCTheme.exe?raw=true)**.
 
 Download the test build for Discord+ **[here](https://github.com/StpME/VCThemeGUI/blob/test/src/dist/VCTheme_test.exe?raw=true)**.
+
+**OR**
+
+Check **[releases](https://github.com/StpME/VCThemeGUI/releases).**
 ### -----------------------------------------------------------------------
 
 VCThemeGUI is a personal test/passion project not intended for any public or commercial use, all credits for themes and clients here:
