@@ -5,6 +5,7 @@ import os
 import webbrowser
 from setup import Setup
 from img_preview import ImagePreview
+from PIL import Image, ImageTk
 
 class DSCPlusGUI:
     # Grab user name to use for file path
@@ -14,7 +15,7 @@ class DSCPlusGUI:
 
     def __init__(self, root):
         self.root = root
-        self.root.title("DSCPlus")
+        self.root.title("VCTheme - DSCPlus")
         self.Setup = Setup
         self.Setup.setup_gui(self, "Discord+")
         self.setup_menu()
@@ -37,6 +38,7 @@ class DSCPlusGUI:
     def open_github(self):
         webbrowser.open_new("https://github.com/StpME/VCThemeGUI")
 
+
     # Create file menu for opening files and closing program
     def setup_menu(self):
         menubar = tk.Menu(self.root)
@@ -45,7 +47,11 @@ class DSCPlusGUI:
         filemenu.add_separator()
         filemenu.add_command(label="Stay on Top", command=self.toggle_stay_on_top)
         filemenu.add_separator()
-        filemenu.add_command(label="Github", command=self.open_github)
+
+        github_img = Image.open("src/img/github_icon.png").resize((16,16), Image.Resampling.LANCZOS)
+        self.github_icon = ImageTk.PhotoImage(github_img)
+        filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=self.open_github)
+        
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
