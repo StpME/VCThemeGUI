@@ -33,6 +33,7 @@ class GUISelector:
     def load_dsc_gui(self):
         self.root.destroy()
         root = tk.Tk()
+        root.minsize(600,400)
 
         width_base = 900 
         height_base = 500
@@ -50,6 +51,18 @@ class GUISelector:
     def load_softx_gui(self):
         self.root.destroy()
         root = tk.Tk()
+        root.minsize(600,400)
+
+        width_base = 900 
+        height_base = 500
+        width_window = root.winfo_screenwidth()
+        height_window = root.winfo_screenheight()
+
+        x = (width_window - width_base) // 2
+        y = (height_window - height_base) // 2
+
+        # Set the new window to center of screen with same dimensions
+        root.geometry(f"{width_base}x{height_base}+{x}+{y}")
         app = SoftXGUI(root)
 
 def main():
