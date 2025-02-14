@@ -27,7 +27,6 @@ class DSCPlusGUI:
         self.img_grid_frame = tk.Frame(self.root)
         self.img_grid_frame.pack(fill="both", expand=True)
 
-        # Initialize the ImagePreview instance as None
         self.image_preview_instance = None
 
     # Toggle window stay on top
@@ -73,12 +72,12 @@ class DSCPlusGUI:
                     widget.destroy()
                 
                 # Create and store the ImagePreview instance
-                self.image_preview_instance = ImagePreview(self.img_grid_frame, img_urls)
+                self.img_preview_instance = ImagePreview(self.img_grid_frame, img_urls)
 
                 backdrop_urls_dark, backdrop_urls_light = self.extract_backdrops(css_content)
                 combined_backdrops = backdrop_urls_dark + backdrop_urls_light
-                unique_list = list(dict.fromkeys(combined_backdrops))
-                self.populate_dropdown(unique_list)
+                uniq_list = list(dict.fromkeys(combined_backdrops))
+                self.populate_dropdown(uniq_list)
 
     # Extract backdrops from file
     def extract_backdrops(self, css_text):
@@ -213,9 +212,9 @@ class DSCPlusGUI:
 
     # Update the image previews when adding new backdrop
     def update_image_previews(self):
-        if self.image_preview_instance:
+        if self.img_preview_instance:
             with open(self.css_file_path, "r") as file:
                 css_content = file.read()
                 img_urls = ImagePreview.extract_img_urls(css_content)
-                self.image_preview_instance.img_urls = img_urls
-                self.image_preview_instance.load_imgs()
+                self.img_preview_instance.img_urls = img_urls
+                self.img_preview_instance.load_imgs()

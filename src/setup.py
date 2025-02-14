@@ -11,7 +11,7 @@ class Setup:
         # Text shown for main window
         self.text = tk.Text(self.root, wrap="word")
         self.text.pack(expand=True, fill="both")
-        
+
         # Dropdown menu
         self.backdrop_options = tk.StringVar(value="Select Backdrop")
         self.backdrop_menu = tk.OptionMenu(self.root, 
@@ -25,6 +25,9 @@ class Setup:
 
         self.backdrop_menu_label = tk.Label(self.root, text="", font=("Arial", 12))
         self.backdrop_menu_label.pack(side=tk.LEFT)
+
+        self.backdrop_menu['menu'].entryconfig(0, state="disabled") # Set first descriptor option to disabled
+        self.backdrop_menu['menu'].add_separator()
 
         # Backdrop frame for button and entry box
         self.bottom_frame = tk.Frame(self.root)
