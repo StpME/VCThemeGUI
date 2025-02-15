@@ -20,7 +20,7 @@ class DSCPlusGUI:
         self.root.title("VCTheme - DSCPlus")
 
         # Set update params with current build
-        self.current_version = "v1.1.0" 
+        self.current_version = "v1.2.0" 
         self.repo = "StpME/VCThemeGUI" 
         self.exe_name = "VCTheme.exe"
         # Create the Updater class
