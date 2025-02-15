@@ -17,7 +17,6 @@ class DSCPlusGUI:
 
     def __init__(self, root):
         self.root = root
-        self.root.title("VCTheme - DSCPlus")
 
         # Set update params with current build
         self.current_version = "v1.2.0" 
@@ -26,6 +25,8 @@ class DSCPlusGUI:
         # Create the Updater class
         self.updater = Updater(self.current_version, self.repo, self.exe_name)
 
+        self.root.title(f"VCTheme - DSCPlus {self.current_version}")
+        
         self.Setup = Setup
         self.Setup.setup_gui(self, "Discord+")
         self.setup_menu()

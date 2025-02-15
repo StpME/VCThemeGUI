@@ -11,6 +11,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+release_versions
 src/tasklist.md
 dist/command.md
 .Python
