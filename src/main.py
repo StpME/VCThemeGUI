@@ -14,7 +14,7 @@ class GUISelector:
         x = (width_window - width_base) // 2  
         y = (height_window - height_base) // 2  
         
-        # Set selector to center of window 
+        # Set selector to center of window
         self.root.geometry(f"{width_base}x{height_base}+{x}+{y}")
         
         tk.Label(self.root, text="Select GUI to Load:").pack(padx=10)

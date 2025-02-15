@@ -72,7 +72,7 @@ class DSCPlusGUI:
                     widget.destroy()
                 
                 # Create and store the ImagePreview instance
-                self.img_preview_instance = ImagePreview(self.img_grid_frame, img_urls)
+                self.img_preview_instance = ImagePreview(self.img_grid_frame, img_urls, onclick=self.set_active_backdrop)
 
                 backdrop_urls_dark, backdrop_urls_light = self.extract_backdrops(css_content)
                 combined_backdrops = backdrop_urls_dark + backdrop_urls_light

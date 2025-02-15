@@ -5,12 +5,13 @@ import requests
 from io import BytesIO
 
 class ImagePreview:
-    def __init__(self, root, img_urls):
+    def __init__(self, root, img_urls, onclick=None):
         self.root = root
         self.img_urls = img_urls
         self.img_labels = []
         self.loaded_urls = set()
         self.preview_size = (125,100) # Set fixed size for all previews
+        self.onclick = onclick
 
         # Create main frame that holds canvas and scrollbar so previews are loaded flexibly
         main_frame = tk.Frame(root)
@@ -75,6 +76,13 @@ class ImagePreview:
                         # Create a label to display the image
                         img_label = tk.Label(self.scrollable_frame, image=tk_img)
                         img_label.img = tk_img
+
+
+                        # Clickable previews
+                        if self.onclick:
+                            img_label.bind("<Button-1>", lambda e, u=url: self.onclick(u))
+
+
                         # Three columns per row (plan to make flex-auto)
                         img_label.grid(row = i // 3, column = i % 3, padx = 5, pady = 5) 
                         self.img_labels.append(img_label)
