@@ -6,6 +6,7 @@ import webbrowser
 from setup import Setup
 from img_preview import ImagePreview
 from PIL import Image, ImageTk
+from updater import Updater
 
 class DSCPlusGUI:
     # Grab user name to use for file path
@@ -16,6 +17,14 @@ class DSCPlusGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("VCTheme - DSCPlus")
+
+        # Set update params with current build
+        self.current_version = "v1.2.0" 
+        self.repo = "StpME/VCThemeGUI" 
+        self.exe_name = "VCTheme.exe"
+        # Create the Updater class
+        self.updater = Updater(self.current_version, self.repo, self.exe_name)
+
         self.Setup = Setup
         self.Setup.setup_gui(self, "Discord+")
         self.setup_menu()
@@ -51,6 +60,8 @@ class DSCPlusGUI:
         self.github_icon = ImageTk.PhotoImage(github_img)
         filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=self.open_github)
         
+        filemenu.add_separator()
+        filemenu.add_command(label="Check for Updates", command=self.updater.check_for_updates)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
