@@ -12,6 +12,7 @@ __pycache__/
 
 # Distribution / packaging
 src/tasklist.md
+dist/command.md
 .Python
 dist/
 build/
