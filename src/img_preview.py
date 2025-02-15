@@ -76,6 +76,7 @@ class ImagePreview:
                         # Create a label to display the image
                         img_label = tk.Label(self.scrollable_frame, image=tk_img)
                         img_label.img = tk_img
+                        img_label.url = url
 
 
                         # Clickable previews
@@ -130,6 +131,14 @@ class ImagePreview:
         self.img_labels = []
         self.loaded_urls = set() 
         print("Cleared existing images")
+
+    def highlight_image(self, url):
+        for img_label in self.img_labels:
+            # Reset styling
+            img_label.config(borderwidth=0, highlightthickness=0)
+            # Highlight the currently selected image with a border
+            if hasattr(img_label, "url") and img_label.url == url:
+                img_label.config(highlightbackground="blue", highlightthickness=4)
 
     # Helper method to extract urls within the class
     def extract_image_urls(css_content):
