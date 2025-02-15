@@ -6,7 +6,6 @@ class GUISelector:
         self.root = root
         self.root.title("GUI Selector")
 
-        
         width_base = 400
         height_base = 300
         width_window = self.root.winfo_screenwidth()

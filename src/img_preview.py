@@ -10,6 +10,7 @@ class ImagePreview:
         self.img_urls = img_urls
         self.img_labels = []
         self.loaded_urls = set()
+        self.preview_size = (125,100) # Set fixed size for all previews
 
         # Create main frame that holds canvas and scrollbar so previews are loaded flexibly
         main_frame = tk.Frame(root)
@@ -31,24 +32,24 @@ class ImagePreview:
         self.canvas.bind_all("<MouseWheel>", self.on_mouse_wheel)
         
         # Load and display images
-        self.load_imgs()
+        self.load_images()
 
         # Bind resize event to adjust window layout with images
         root.bind("<Configure>", self.on_resize)
 
     # Checks for valid extensions on image urls so they can be displayed
-    def is_valid_img_url(self, url):
+    def is_valid_image_url(self, url):
         valid_extensions = [".gif", ".png", ".jpg", ".jpeg", ".bmp", ".webp"]
         return any(url.lower().endswith(ext) for ext in valid_extensions)
 
     # Loads images, checking and skipping invalid or broken urls
-    def load_imgs(self):
+    def load_images(self):
         self.clear_existing_images()
         for i, url in enumerate(self.img_urls):
             if url not in self.loaded_urls:
                 try:
                     # Skip invalid URLs
-                    if not self.is_valid_img_url(url):
+                    if not self.is_valid_image_url(url):
                         print(f"Skipping invalid image URL: {url}")
                         continue
 
@@ -56,7 +57,7 @@ class ImagePreview:
                     # Imgur and other sites may block site requests without valid User-Agents
                     headers = {
                         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/91.0.4472.124 Safari/537.36"
-                    } # This is emulating a Chrome user on Windows 10 with compatibility
+                    } # Emulating a Chrome user on Windows 10
 
                     # Fetch the image from the URL and check validity/status
                     response = requests.get(url, headers=headers)
@@ -67,6 +68,7 @@ class ImagePreview:
                         # Load the image using Pillow/PIL
                         img_data = response.content
                         img = Image.open(BytesIO(img_data))
+                        img = self.resize_and_crop(img, self.preview_size)
                         img.thumbnail((150, 150))  # Resize the image to fit in the grid
                         # Convert the the PIL image to Tkinter
                         tk_img = ImageTk.PhotoImage(img)
@@ -87,6 +89,32 @@ class ImagePreview:
         self.on_resize(None)
         self.update_scrollregion()
 
+    # Standardize image preview sizes
+    def resize_and_crop(self, img, size):
+    # Calculate the images aspect ratio
+        img_ratio = img.width / img.height
+        target_ratio = size[0] / size[1]
+
+        # Resize the image to fit within the target ratio while maintaining aspect ratio
+        # left/right/top/bottom vars are the calculated crop positions for wider or taller images
+        # Images are cropped on both sides if necessary to crop to the center for visibility
+        if img_ratio > target_ratio: # if wider
+            new_height = size[1]
+            new_width = int(new_height * img_ratio)
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            left = (img.width - size[0]) / 2 
+            right = left + size[0]
+            img = img.crop((left, 0, right, size[1]))
+        else: # if taller
+            new_width = size[0]
+            new_height = int(new_width / img_ratio)
+            img = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
+            top = (img.height - size[1]) / 2
+            bottom = top + size[1]
+            img = img.crop((0, top, size[0], bottom))
+
+        return img
+
     # Clears images to avoid duped previews
     def clear_existing_images(self):
         for img_label in self.img_labels:
@@ -96,8 +124,7 @@ class ImagePreview:
         print("Cleared existing images")
 
     # Helper method to extract urls within the class
-    # *can't import method as they need sorted backdrops as a list instead of set
-    def extract_img_urls(css_content):
+    def extract_image_urls(css_content):
         img_urls = []
         for line in css_content.split("\n"):
             if "--dplus-backdrop" in line and "url(" in line:

@@ -65,7 +65,7 @@ class DSCPlusGUI:
             with open(file_path, "r") as file:
                 css_content = file.read()
                 # Extract image URLs from the CSS
-                img_urls = ImagePreview.extract_img_urls(css_content)
+                img_urls = ImagePreview.extract_image_urls(css_content)
                 
                 # Clear the existing image grid
                 for widget in self.img_grid_frame.winfo_children():
@@ -215,6 +215,6 @@ class DSCPlusGUI:
         if self.img_preview_instance:
             with open(self.css_file_path, "r") as file:
                 css_content = file.read()
-                img_urls = ImagePreview.extract_img_urls(css_content)
+                img_urls = ImagePreview.extract_image_urls(css_content)
                 self.img_preview_instance.img_urls = img_urls
-                self.img_preview_instance.load_imgs()
+                self.img_preview_instance.load_images()
