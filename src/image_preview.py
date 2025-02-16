@@ -141,10 +141,10 @@ class ImagePreview:
                 img_label.config(highlightbackground="blue", highlightthickness=4)
 
     # Helper method to extract urls within the class
-    def extract_image_urls(css_content):
+    def extract_image_urls(css_content, theme_format):
         img_urls = []
         for line in css_content.split("\n"):
-            if "--dplus-backdrop" in line and "url(" in line:
+            if theme_format in line and "url(" in line:
                 # Extract the URL from the CSS line
                 url = line.split("url(")[1].split(")")[0]
                 img_urls.append(url)

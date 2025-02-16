@@ -2,15 +2,14 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
-# import sys
 import webbrowser
 from setup import Setup
-from img_preview import ImagePreview
+from image_preview import ImagePreview
 from PIL import Image, ImageTk
 
 from updater import Updater
-from BackdropManager import BackdropManager
-from FileManager import FileManager
+from backdrop_manager import BackdropManager
+from file_manager import FileManager
 
 class DSCPlusGUI:
     # Grab user name to use for file path
@@ -20,11 +19,13 @@ class DSCPlusGUI:
 
     def __init__(self, root):
         self.root = root
-        self.backdrop_manager = BackdropManager(self.css_file_path)
-        self.file_manager = FileManager()
-
         # [0] = theme, [1] = ,[2] = backdrop string
         self.theme_config = ["Discord+", 0,"--dplus-backdrop"]
+        
+        self.backdrop_manager = BackdropManager(self.css_file_path)
+        self.file_manager = FileManager(self.theme_config)
+
+        
 
 
 
@@ -94,13 +95,14 @@ class DSCPlusGUI:
         if file_path:
             self.backdrop_options = tk.StringVar(value="Select Backdrop")
             with open(file_path, "r") as file:
-                css_content = file.read()
+                # css_content = file.read()
                 # Extract image URLs from the CSS
-                img_urls = ImagePreview.extract_image_urls(css_content)
-                
-                # Clear the existing image grid
-                for widget in self.img_grid_frame.winfo_children():
-                    widget.destroy()
+                # img_urls = ImagePreview.extract_image_urls(css_content)
+                css_content, img_urls = self.file_manager.extract_urls(file_path)
+                if css_content and img_urls:
+                    # Clear the existing image grid
+                    for widget in self.img_grid_frame.winfo_children():
+                        widget.destroy()
                 
                 # Create and store the ImagePreview instance
                 self.img_preview_instance = ImagePreview(self.img_grid_frame, img_urls, onclick=self.set_active_backdrop)
@@ -223,6 +225,6 @@ class DSCPlusGUI:
         if self.img_preview_instance:
             with open(self.css_file_path, "r") as file:
                 css_content = file.read()
-                img_urls = ImagePreview.extract_image_urls(css_content)
+                img_urls = ImagePreview.extract_image_urls(css_content, self.theme_config[2])
                 self.img_preview_instance.img_urls = img_urls
                 self.img_preview_instance.load_images()
