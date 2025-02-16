@@ -2,12 +2,15 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
-import sys
+# import sys
 import webbrowser
 from setup import Setup
 from img_preview import ImagePreview
 from PIL import Image, ImageTk
+
 from updater import Updater
+from BackdropManager import BackdropManager
+from FileManager import FileManager
 
 class DSCPlusGUI:
     # Grab user name to use for file path
@@ -17,6 +20,14 @@ class DSCPlusGUI:
 
     def __init__(self, root):
         self.root = root
+        self.backdrop_manager = BackdropManager(self.css_file_path)
+        self.file_manager = FileManager()
+
+        # [0] = theme, [1] = ,[2] = backdrop string
+        self.theme_config = ["Discord+", 0,"--dplus-backdrop"]
+
+
+
 
         # Set update params with current build
         self.current_version = "v1.2.0" 
@@ -49,12 +60,12 @@ class DSCPlusGUI:
         webbrowser.open_new("https://github.com/StpME/VCThemeGUI")
 
     # Dynamic relative path finder for exe distribution
-    def file_path(self, relative_path):
-        if getattr(sys, 'frozen', False):  # Check if exe
-            base_path = sys._MEIPASS # temp dir
-        else:  # Otherwise script for dev
-            base_path = os.path.dirname(os.path.abspath(__file__)) # wd of script
-        return os.path.join(base_path, relative_path) # create full path dependent on base
+    # def file_path(self, relative_path):
+    #     if getattr(sys, 'frozen', False):  # Check if exe
+    #         base_path = sys._MEIPASS # temp dir
+    #     else:  # Otherwise script for dev
+    #         base_path = os.path.dirname(os.path.abspath(__file__)) # wd of script
+    #     return os.path.join(base_path, relative_path) # create full path dependent on base
     
     # Create file menu for opening files and closing program
     def setup_menu(self):
@@ -65,7 +76,7 @@ class DSCPlusGUI:
         filemenu.add_command(label="Stay on Top", command=self.toggle_stay_on_top)
         filemenu.add_separator()
 
-        github_img = Image.open(self.file_path("img/github_icon.png")).resize((16,16), Image.Resampling.LANCZOS)
+        github_img = Image.open(self.file_manager.file_path("img/github_icon.png")).resize((16,16), Image.Resampling.LANCZOS)
         self.github_icon = ImageTk.PhotoImage(github_img)
         filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=self.open_github)
         
@@ -139,7 +150,7 @@ class DSCPlusGUI:
     # Set active backdrop based on the selected backdrop in dropdown
     def set_active_backdrop(self, selected_url):
         self.active_backdrop = selected_url
-        self.update_css_file()
+        self.backdrop_manager.update_css_file(self.active_backdrop, self.theme_config[2])
 
         # Highlight the selected image in the preview
         if self.img_preview_instance:
@@ -167,7 +178,7 @@ class DSCPlusGUI:
     def add_backdrop_to_css(self):
         link = self.backdrop_entry.get()
         if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
-            with open(DSCPlusGUI.css_file_path, "r") as file:
+            with open(self.css_file_path, "r") as file:
                 css_content = file.readlines()
 
             if not any(f"url({link})" in line for line in css_content):
@@ -191,7 +202,7 @@ class DSCPlusGUI:
                         index_last_backdrop_light = i
                         break
 
-                with open(DSCPlusGUI.css_file_path, "w") as file:
+                with open(self.css_file_path, "w") as file:
                     for i, line in enumerate(css_content):
                         file.write(line)
                         if i == index_last_backdrop_dark and backdrop_section_dark != -1:
@@ -206,32 +217,6 @@ class DSCPlusGUI:
                 messagebox.showerror("Error", "This link is already present in the list of backdrops.")
         else:
             messagebox.showerror("Error", "Please enter a valid URL with a .png, .jpg/jpeg, or .gif extension.")
-
-    # Check if backdrop is already commented out to prevent appending additional comments
-    def is_backdrop_commented(self, line):
-        return line.strip().startswith("/*") and line.strip().endswith("*/")
-
-    # Update file with active backdrop
-    def update_css_file(self):
-        if self.active_backdrop:
-            with open(DSCPlusGUI.css_file_path, "r") as file:
-                lines = file.readlines()
-
-            with open(DSCPlusGUI.css_file_path, "w") as file:
-                for line in lines:
-                    if "--dplus-backdrop" in line:
-                        if self.active_backdrop in line:
-                            if self.is_backdrop_commented(line):
-                                file.write(line.replace("/*", "").replace("*/", ""))
-                            else:
-                                file.write("/*" + line.strip() + "*/\n")
-                        elif not self.is_backdrop_commented(line):
-                            file.write("/*" + line.strip() + "*/\n")
-                        else:
-                            file.write(line)
-                    else:
-                        file.write(line)
-            # self.update_image_previews()
 
     # Update the image previews when adding new backdrop
     def update_image_previews(self):
