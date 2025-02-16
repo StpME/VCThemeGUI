@@ -95,9 +95,6 @@ class DSCPlusGUI:
         if file_path:
             self.backdrop_options = tk.StringVar(value="Select Backdrop")
             with open(file_path, "r") as file:
-                # css_content = file.read()
-                # Extract image URLs from the CSS
-                # img_urls = ImagePreview.extract_image_urls(css_content)
                 css_content, img_urls = self.file_manager.extract_urls(file_path)
                 if css_content and img_urls:
                     # Clear the existing image grid
