@@ -20,7 +20,7 @@ class DSCPlusGUI:
     def __init__(self, root):
         self.root = root
         # [0] = theme, [1] = ,[2] = backdrop string
-        self.theme_config = ["Discord+", 0,"--dplus-backdrop"]
+        self.theme_config = ["Discord+", 0, "--dplus-backdrop"]
         
         self.backdrop_manager = BackdropManager(self.css_file_path)
         self.file_manager = FileManager(self.theme_config)
@@ -45,22 +45,6 @@ class DSCPlusGUI:
         self.img_grid_frame.pack(fill="both", expand=True)
 
         self.image_preview_instance = None
-
-    # Toggle window stay on top
-    def toggle_stay_on_top(self):
-        self.root.attributes("-topmost", not self.root.attributes("-topmost"))
-
-    # Link to project Github page
-    def open_github(self):
-        webbrowser.open_new("https://github.com/StpME/VCThemeGUI")
-
-    # Dynamic relative path finder for exe distribution
-    # def file_path(self, relative_path):
-    #     if getattr(sys, 'frozen', False):  # Check if exe
-    #         base_path = sys._MEIPASS # temp dir
-    #     else:  # Otherwise script for dev
-    #         base_path = os.path.dirname(os.path.abspath(__file__)) # wd of script
-    #     return os.path.join(base_path, relative_path) # create full path dependent on base
     
     # Create file menu for opening files and closing program
     def setup_menu(self):
@@ -68,13 +52,13 @@ class DSCPlusGUI:
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="Open", command=self.open_file)
         filemenu.add_separator()
-        filemenu.add_command(label="Stay on Top", command=self.toggle_stay_on_top)
+        filemenu.add_command(label="Stay on Top", command=Setup.toggle_stay_on_top)
         filemenu.add_separator()
 
         github_img = Image.open(self.file_manager.file_path("img/github_icon.png")).resize((16,16), Image.Resampling.LANCZOS)
         self.github_icon = ImageTk.PhotoImage(github_img)
-        filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=self.open_github)
-        
+        filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=Setup.open_github)
+
         filemenu.add_separator()
         filemenu.add_command(label="Check for Updates", command=self.updater.check_for_updates)
         filemenu.add_separator()
@@ -114,7 +98,7 @@ class DSCPlusGUI:
                 backdrop_section = "dark"
             elif ".theme-light" in line:
                 backdrop_section = "light"
-            elif "--dplus-backdrop" in line:
+            elif self.theme_config[2] in line:
                 backdrop_url = line.split("url(")[1].split(")")[0]
                 if backdrop_section == "dark":
                     backdrop_urls_dark.append(backdrop_url)
@@ -127,7 +111,7 @@ class DSCPlusGUI:
         uniq_backdrops = list()
         for line in css_text.split("\n"):
             backdrop = line.strip()
-            if "--dplus-backdrop" in line and backdrop not in uniq_backdrops:
+            if self.theme_config[2] in line and backdrop not in uniq_backdrops:
                 uniq_backdrops.append(backdrop)
         return "\n".join(uniq_backdrops)
 
@@ -162,12 +146,12 @@ class DSCPlusGUI:
         for line in css_content.split("\n"):
             if ".theme-dark" in line:
                 current_section = "dark"
-            elif "--dplus-backdrop" in line:
+            elif self.theme_config[2] in line:
                 if current_section == "dark" and line not in dark_backdrops:
                     dark_backdrops.append(line)
         return "Backdrop list:\n" + "\n".join(dark_backdrops)
 
-    # Add the backdrop url to the file when button is clicked
+    # Add the backdrop url to the file when button is clicked (works for dark and light)
     def add_backdrop_to_css(self):
         link = self.backdrop_entry.get()
         if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
@@ -186,12 +170,12 @@ class DSCPlusGUI:
                 index_last_backdrop_dark = -1
                 index_last_backdrop_light = -1
                 for i, line in reversed(list(enumerate(css_content))):
-                    if "--dplus-backdrop" in line and i > backdrop_section_dark and (backdrop_section_light == -1 or i < backdrop_section_light):
+                    if self.theme_config[2] in line and i > backdrop_section_dark and (backdrop_section_light == -1 or i < backdrop_section_light):
                         index_last_backdrop_dark = i
                         break
 
                 for i, line in reversed(list(enumerate(css_content))):
-                    if "--dplus-backdrop" in line and i > backdrop_section_light:
+                    if self.theme_config[2] in line and i > backdrop_section_light:
                         index_last_backdrop_light = i
                         break
 

@@ -4,7 +4,8 @@ import tkinter as tk
 class GUISelector:
     def __init__(self, root):
         self.root = root
-        self.root.title("GUI Selector")
+        root.title("GUI Selector")
+        root.minsize(300,200)
 
         width_base = 400
         height_base = 300

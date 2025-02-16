@@ -1,4 +1,5 @@
 import tkinter as tk
+import webbrowser
 class Setup:
     REPO = "StpME/VCThemeGUI"
     EXE_NAME = "VCTheme.exe"
@@ -57,3 +58,11 @@ class Setup:
         self.root.bind("<Configure>", set_entry_width)
 
         set_entry_width()
+        
+    # Toggle window stay on top
+    def toggle_stay_on_top(self):
+        self.root.attributes("-topmost", not self.root.attributes("-topmost"))
+
+    # Link to project Github page
+    def open_github(self):
+        webbrowser.open_new("https://github.com/StpME/VCThemeGUI")
