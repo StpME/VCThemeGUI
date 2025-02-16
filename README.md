@@ -2,16 +2,17 @@
 
 This is a simple GUI for editing the CSS for specifically editing the **backdrop/background** of Discord+ and SoftX, themes for Vencord and BetterDiscord. It allows you to set the backdrop of Discord+ by selecting an existing or added url to an image (.png, .jpg, .jpeg, .gif) from the dropdown instead of going into the file yourself and manually editing or commenting out images.
 
-This allows you to more easily store multiple backdrops for the theme and swap between them without having to work within the text css file itself for simpler access.
+This allows you to more easily store multiple backdrops for the theme and swap between them within a simple interface without having to work within the text css file itself for simpler access.
 
 ****This was made for personal Vencord use and I have not tested with other modded clients, but the css files should be same except for directory locations.**
 
 ### -----------------------------------------------------------------------
 ## How to use:
--  Open the GUI exe (VCTheme.exe)
-- Go to File → Open in top left corner, then select the Discord+ theme CSS file for your modded discord.
-- Use **Select Backdrop** in bottom left corner to open dropdown menu so you can swap between existing backdrops
-- Use **Add Backdrop** in bottom right corner to add new backdrops into the file and Backdrop menu
+-  Open the program (VCTheme.exe)
+- Go to File → Open in top left corner, then select the theme CSS file for your Discord.
+- Use **Select Backdrop** to open dropdown menu so you can swap between existing backdrops
+- Loaded images can also be clicked to select a backdrop instead.
+- Use **Add Backdrop** to add new backdrops into the file and Backdrop menu
     - Only supports image/gif links with common appropriate extensions (.png, .jpg, .jpeg, .gif)
          - Can upload a local image to [Imgur](https://imgur.com/upload) or other media sites then open your uploaded image in a new tab and copy that link to be inserted as a backdrop (See GIF example below)
 
