@@ -6,7 +6,7 @@ class Setup:
 
     def setup_gui(self, gui_name):
         # GUI main headers
-        self.label = tk.Label(self.root, text=("Select " + gui_name + " theme CSS file"), font=("Arial", 12))
+        self.label = tk.Label(self.root, text=("Select " + gui_name + " theme from File menu"), font=("Arial", 12))
         self.label.pack()
         self.sub_label = tk.Label(self.root, text="Default Location: C:\\Users\\"+str(self.username)+"\\AppData\\Roaming\\Vencord\\themes", 
                             font=("Arial", 10))

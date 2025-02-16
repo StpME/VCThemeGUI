@@ -133,23 +133,23 @@ class DSCPlusGUI:
         if self.img_preview_instance:
             self.img_preview_instance.highlight_image(selected_url)
 
-        if self.text and os.path.exists(self.css_file_path):
-            with open(self.css_file_path, "r") as file:
-                css_content = file.read()
-                self.text.delete(1.0, tk.END)
-                self.text.insert(tk.END, self.get_backdrop_section(css_content))
+        # if self.text and os.path.exists(self.css_file_path):
+        #     with open(self.css_file_path, "r") as file:
+        #         css_content = file.read()
+        #         self.text.delete(1.0, tk.END)
+        #         self.text.insert(tk.END, self.get_backdrop_section(css_content))
 
     # Find backdrop section within the theme section of the file (only checks dark theme)
-    def get_backdrop_section(self, css_content):
-        dark_backdrops = list()
-        current_section = None
-        for line in css_content.split("\n"):
-            if ".theme-dark" in line:
-                current_section = "dark"
-            elif self.theme_config[2] in line:
-                if current_section == "dark" and line not in dark_backdrops:
-                    dark_backdrops.append(line)
-        return "Backdrop list:\n" + "\n".join(dark_backdrops)
+    # def get_backdrop_section(self, css_content):
+    #     dark_backdrops = list()
+    #     current_section = None
+    #     for line in css_content.split("\n"):
+    #         if ".theme-dark" in line:
+    #             current_section = "dark"
+    #         elif self.theme_config[2] in line:
+    #             if current_section == "dark" and line not in dark_backdrops:
+    #                 dark_backdrops.append(line)
+    #     return "Backdrop list:\n" + "\n".join(dark_backdrops)
 
     # Add the backdrop url to the file when button is clicked (works for dark and light)
     def add_backdrop_to_css(self):
