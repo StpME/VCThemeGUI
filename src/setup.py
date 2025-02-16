@@ -1,5 +1,8 @@
 import tkinter as tk
 class Setup:
+    REPO = "StpME/VCThemeGUI"
+    EXE_NAME = "VCTheme.exe"
+
     def setup_gui(self, gui_name):
         # GUI main headers
         self.label = tk.Label(self.root, text=("Select " + gui_name + " theme CSS file"), font=("Arial", 12))

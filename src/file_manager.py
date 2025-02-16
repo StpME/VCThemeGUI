@@ -24,7 +24,16 @@ class FileManager:
         except Exception as e:
             print(f"Error reading CSS file: {e}")
             return None, []
-        
+    
+    def get_version(self):
+        # Read current version num from txt or return default version if missing/error
+        version_file_path = self.file_path("version.txt")
+        try:
+            with open(version_file_path, "r") as version_file:
+                return version_file.read().strip()
+        except FileNotFoundError:
+            print(f"Warning: version.txt not found. Using default version: v1.0.0")
+            return "v1.0.0"
 
 
 

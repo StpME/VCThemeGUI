@@ -25,19 +25,13 @@ class DSCPlusGUI:
         self.backdrop_manager = BackdropManager(self.css_file_path)
         self.file_manager = FileManager(self.theme_config)
 
+        self.current_version = self.file_manager.get_version()
+        self.repo = Setup.REPO
+        self.exe_name = Setup.EXE_NAME
         
-
-
-
-
-        # Set update params with current build
-        self.current_version = "v1.2.0" 
-        self.repo = "StpME/VCThemeGUI" 
-        self.exe_name = "VCTheme.exe"
-        # Create the Updater class
         self.updater = Updater(self.current_version, self.repo, self.exe_name)
 
-        self.root.title(f"VCTheme - DSCPlus {self.current_version}")
+        self.root.title(f"VCTheme | {self.theme_config[0]} | {self.current_version}")
         
         self.Setup = Setup
         self.Setup.setup_gui(self, "Discord+")
