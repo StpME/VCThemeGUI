@@ -72,20 +72,26 @@ class DSCPlusGUI:
         file_path = filedialog.askopenfilename(initialdir=init_dir, filetypes=[("CSS files", "*.css")])
         if file_path:
             self.backdrop_options = tk.StringVar(value="Select Backdrop")
+            # Clear the existing image grid
+            for widget in self.img_grid_frame.winfo_children():
+                widget.destroy()
+            # Clear the dropdown menu
+            self.backdrop_menu['menu'].delete(0, 'end')  # Remove all options
+            self.backdrop_menu['menu'].add_command(label="Select Below")  # Add the default option
+            self.backdrop_menu['menu'].entryconfig(0, state="disabled")  # Disable the default option
+            self.backdrop_menu['menu'].add_separator()
             with open(file_path, "r") as file:
                 css_content, img_urls = self.file_manager.extract_urls(file_path)
                 if css_content and img_urls:
-                    # Clear the existing image grid
-                    for widget in self.img_grid_frame.winfo_children():
-                        widget.destroy()
+            
                 
-                # Create and store the ImagePreview instance
-                self.img_preview_instance = ImagePreview(self.img_grid_frame, img_urls, onclick=self.set_active_backdrop)
+                    # Create and store the ImagePreview instance
+                    self.img_preview_instance = ImagePreview(self.img_grid_frame, img_urls, onclick=self.set_active_backdrop)
 
-                backdrop_urls_dark, backdrop_urls_light = self.extract_backdrops(css_content)
-                combined_backdrops = backdrop_urls_dark + backdrop_urls_light
-                uniq_list = list(dict.fromkeys(combined_backdrops))
-                self.populate_dropdown(uniq_list)
+                    backdrop_urls_dark, backdrop_urls_light = self.extract_backdrops(css_content)
+                    combined_backdrops = backdrop_urls_dark + backdrop_urls_light
+                    uniq_list = list(dict.fromkeys(combined_backdrops))
+                    self.populate_dropdown(uniq_list)
 
     # Extract backdrops from file
     def extract_backdrops(self, css_text):
@@ -132,24 +138,6 @@ class DSCPlusGUI:
         # Highlight the selected image in the preview
         if self.img_preview_instance:
             self.img_preview_instance.highlight_image(selected_url)
-
-        # if self.text and os.path.exists(self.css_file_path):
-        #     with open(self.css_file_path, "r") as file:
-        #         css_content = file.read()
-        #         self.text.delete(1.0, tk.END)
-        #         self.text.insert(tk.END, self.get_backdrop_section(css_content))
-
-    # Find backdrop section within the theme section of the file (only checks dark theme)
-    # def get_backdrop_section(self, css_content):
-    #     dark_backdrops = list()
-    #     current_section = None
-    #     for line in css_content.split("\n"):
-    #         if ".theme-dark" in line:
-    #             current_section = "dark"
-    #         elif self.theme_config[2] in line:
-    #             if current_section == "dark" and line not in dark_backdrops:
-    #                 dark_backdrops.append(line)
-    #     return "Backdrop list:\n" + "\n".join(dark_backdrops)
 
     # Add the backdrop url to the file when button is clicked (works for dark and light)
     def add_backdrop_to_css(self):
