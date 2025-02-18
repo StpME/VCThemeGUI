@@ -64,5 +64,5 @@ class Setup:
         self.root.attributes("-topmost", not self.root.attributes("-topmost"))
 
     # Link to project Github page
-    def open_github(self):
+    def open_github():
         webbrowser.open_new("https://github.com/StpME/VCThemeGUI")

@@ -57,7 +57,7 @@ class DSCPlusGUI:
 
         github_img = Image.open(self.file_manager.file_path("img/github_icon.png")).resize((16,16), Image.Resampling.LANCZOS)
         self.github_icon = ImageTk.PhotoImage(github_img)
-        filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=Setup.open_github)
+        filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=self.Setup.open_github)
 
         filemenu.add_separator()
         filemenu.add_command(label="Check for Updates", command=self.updater.check_for_updates)
@@ -72,19 +72,21 @@ class DSCPlusGUI:
         file_path = filedialog.askopenfilename(initialdir=init_dir, filetypes=[("CSS files", "*.css")])
         if file_path:
             self.backdrop_options = tk.StringVar(value="Select Backdrop")
+
             # Clear the existing image grid
             for widget in self.img_grid_frame.winfo_children():
                 widget.destroy()
+
             # Clear the dropdown menu
-            self.backdrop_menu['menu'].delete(0, 'end')  # Remove all options
-            self.backdrop_menu['menu'].add_command(label="Select Below")  # Add the default option
-            self.backdrop_menu['menu'].entryconfig(0, state="disabled")  # Disable the default option
+            self.backdrop_menu['menu'].delete(0, 'end')
+            self.backdrop_menu['menu'].add_command(label="Select Below")
+            self.backdrop_menu['menu'].entryconfig(0, state="disabled") 
             self.backdrop_menu['menu'].add_separator()
+
             with open(file_path, "r") as file:
                 css_content, img_urls = self.file_manager.extract_urls(file_path)
                 if css_content and img_urls:
             
-                
                     # Create and store the ImagePreview instance
                     self.img_preview_instance = ImagePreview(self.img_grid_frame, img_urls, onclick=self.set_active_backdrop)
 
