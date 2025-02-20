@@ -146,7 +146,7 @@ class SoftXGUI:
                 for i, line in enumerate(css_content):
                     file.write(line)
                     if i == backdrop_index:
-                        file.write(f"/*{self.theme_config[2]} url({link});*/\n")
+                        file.write(f"/*{self.theme_config[2]}: url({link});*/\n")
 
             self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))
             self.backdrop_entry.delete(0, tk.END)
