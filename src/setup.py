@@ -60,8 +60,9 @@ class Setup:
         set_entry_width()
         
     # Toggle window stay on top
+    @staticmethod
     def toggle_stay_on_top(self):
-        self.root.attributes("-topmost", not self.root.attributes("-topmost"))
+        self.attributes("-topmost", not self.attributes("-topmost"))
 
     # Link to project Github page
     def open_github():

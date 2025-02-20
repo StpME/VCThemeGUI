@@ -34,7 +34,7 @@ class DSCPlusGUI:
         self.root.title(f"VCTheme | {self.theme_config[0]} | {self.current_version}")
         
         self.Setup = Setup
-        self.Setup.setup_gui(self, "Discord+")
+        self.Setup.setup_gui(self, self.theme_config[0])
         self.setup_menu()
 
         # Remove the existing text widget
@@ -43,8 +43,6 @@ class DSCPlusGUI:
         # Create a new frame for the image grid
         self.img_grid_frame = tk.Frame(self.root)
         self.img_grid_frame.pack(fill="both", expand=True)
-
-        self.image_preview_instance = None
     
     # Create file menu for opening files and closing program
     def setup_menu(self):
@@ -52,7 +50,7 @@ class DSCPlusGUI:
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="Open", command=self.open_file)
         filemenu.add_separator()
-        filemenu.add_command(label="Stay on Top", command=Setup.toggle_stay_on_top)
+        filemenu.add_command(label="Stay on Top", command=lambda:Setup.toggle_stay_on_top(self.root))
         filemenu.add_separator()
 
         github_img = Image.open(self.file_manager.file_path("img/github_icon.png")).resize((16,16), Image.Resampling.LANCZOS)
@@ -113,15 +111,6 @@ class DSCPlusGUI:
                 elif backdrop_section == "light":
                     backdrop_urls_light.append(backdrop_url)
         return backdrop_urls_dark, backdrop_urls_light
-    
-    # Create list of unique backdrops directly from file
-    def get_unique_backdrops(self, css_text):
-        uniq_backdrops = list()
-        for line in css_text.split("\n"):
-            backdrop = line.strip()
-            if self.theme_config[2] in line and backdrop not in uniq_backdrops:
-                uniq_backdrops.append(backdrop)
-        return "\n".join(uniq_backdrops)
 
     # Fill in dropdown menu with extracted urls
     def populate_dropdown(self, backdrop_urls):
@@ -173,9 +162,9 @@ class DSCPlusGUI:
                     for i, line in enumerate(css_content):
                         file.write(line)
                         if i == index_last_backdrop_dark and backdrop_section_dark != -1:
-                            file.write(f"/*--dplus-backdrop: url({link});*/\n")
+                            file.write(f"/*{self.theme_config[2]}: url({link});*/\n")
                         if i == index_last_backdrop_light and backdrop_section_light != -1:
-                            file.write(f"/*--dplus-backdrop: url({link});*/\n")
+                            file.write(f"/*{self.theme_config[2]}: url({link});*/\n")
 
                 self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))
                 self.backdrop_entry.delete(0, tk.END)

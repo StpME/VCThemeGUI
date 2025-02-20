@@ -2,7 +2,14 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 import re
 import os
+import webbrowser
 from setup import Setup
+from image_preview import ImagePreview
+from PIL import Image, ImageTk
+
+from updater import Updater
+from backdrop_manager import BackdropManager
+from file_manager import FileManager
 
 class SoftXGUI:
     # Grab user name to use for file path
@@ -12,16 +19,30 @@ class SoftXGUI:
 
     def __init__(self, root):
         self.root = root
-        self.root.title("SoftX")
+        # [0] = theme, [1] = ,[2] = backdrop string
+        self.theme_config = ["SoftX", 0, "--background-image"]
+        
+        self.backdrop_manager = BackdropManager(self.css_file_path)
+        self.file_manager = FileManager(self.theme_config)
+
+        self.current_version = self.file_manager.get_version()
+        self.repo = Setup.REPO
+        self.exe_name = Setup.EXE_NAME
+        
+        self.updater = Updater(self.current_version, self.repo, self.exe_name)
+
+        self.root.title(f"VCTheme | {self.theme_config[0]} | {self.current_version}")
         
         self.Setup = Setup
-        self.Setup.setup_gui(self, "SoftX")
+        self.Setup.setup_gui(self, self.theme_config[0])
         self.setup_menu()
-    
-    
 
-    def toggle_stay_on_top(self):
-        self.root.attributes("-topmost", not self.root.attributes("-topmost"))
+        # Remove the existing text widget
+        self.text.destroy() 
+
+        # Create a new frame for the image grid
+        self.img_grid_frame = tk.Frame(self.root)
+        self.img_grid_frame.pack(fill="both", expand=True)
 
     # Create file menu for opening files and closing program
     def setup_menu(self):
@@ -29,7 +50,15 @@ class SoftXGUI:
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="Open", command=self.open_file)
         filemenu.add_separator()
-        filemenu.add_command(label="Stay on Top", command=self.toggle_stay_on_top)
+        filemenu.add_command(label="Stay on Top", command=lambda:Setup.toggle_stay_on_top(self.root))
+        filemenu.add_separator()
+
+        github_img = Image.open(self.file_manager.file_path("img/github_icon.png")).resize((16,16), Image.Resampling.LANCZOS)
+        self.github_icon = ImageTk.PhotoImage(github_img)
+        filemenu.add_command(label="Github", image=self.github_icon, compound=tk.RIGHT, command=self.Setup.open_github)
+
+        filemenu.add_separator()
+        filemenu.add_command(label="Check for Updates", command=self.updater.check_for_updates)
         filemenu.add_separator()
         filemenu.add_command(label="Exit", command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
@@ -41,46 +70,40 @@ class SoftXGUI:
         file_path = filedialog.askopenfilename(initialdir=init_dir, filetypes=[("CSS files", "*.css")])
         if file_path:
             self.backdrop_options = tk.StringVar(value="Select Backdrop")
-            with open(file_path, "r") as file:
-                css_content = file.read()
-                self.text.delete(1.0, tk.END)
-                self.text.insert(tk.END,"Backdrop list:\n", "backdrop_label")
-                self.text.tag_configure("backdrop_label", font=("Arial", 12, "bold"))
 
-                self.text.insert(tk.END, SoftXGUI.get_unique_backdrops(self, css_content))
-                backdrop_urls = SoftXGUI.extract_backdrops(self, css_content)
-                self.populate_dropdown(backdrop_urls)
+            # Clear the existing image grid
+            for widget in self.img_grid_frame.winfo_children():
+                widget.destroy()
+
+            # Clear the dropdown menu
+            self.backdrop_menu['menu'].delete(0, 'end')
+            self.backdrop_menu['menu'].add_command(label="Select Below")
+            self.backdrop_menu['menu'].entryconfig(0, state="disabled") 
+            self.backdrop_menu['menu'].add_separator()
+
+            with open(file_path, "r") as file:
+                css_content, img_urls = self.file_manager.extract_urls(file_path)
+                if css_content and img_urls:
+            
+                    # Create and store the ImagePreview instance
+                    self.img_preview_instance = ImagePreview(self.img_grid_frame, img_urls, onclick=self.set_active_backdrop)
+
+                    backdrop_urls = self.extract_backdrops(css_content)
+                    uniq_list = list(dict.fromkeys(backdrop_urls))
+                    self.populate_dropdown(uniq_list)
 
     # Extract backdrops from file
     def extract_backdrops(self, css_text):
         backdrop_urls = []
         lines = css_text.split("\n")
         for line in lines:
-            if "--background-image:" in line:
-                url = self.get_clean_url(line)
-                if url not in backdrop_urls:
-                    backdrop_urls.append(url)
-
-                
+            if self.theme_config[2] in line and "|" not in line:
+                backdrop_url = line.split("url(")[1].split(")")[0]
+                if backdrop_url not in backdrop_urls:
+                    backdrop_urls.append(backdrop_url)
         return backdrop_urls
-    
-    def get_clean_url(self, line):
-        url = line.split("url(")[1].split(")")[0]
-        # Ignore "" in the url for cleaner display
-        if '"' in url:
-            url = url.strip('"')
-        return url
-    
-    # Create set of unique backdrops from file
-    def get_unique_backdrops(self, css_text):
-        uniq_backdrops = list()
-        for line in css_text.split("\n"):
-            url = line.strip()
-            if "--background-image:" in line and url not in uniq_backdrops:
-                uniq_backdrops.append(url)
-        return "\n".join(uniq_backdrops)
 
-    # Fill in dropdown menu with extracted backdrops
+    # Fill in dropdown menu with extracted urls
     def populate_dropdown(self, backdrop_urls):
         self.backdrop_options.set("")
         uniq_urls = list()
@@ -92,84 +115,50 @@ class SoftXGUI:
     # Set active backdrop based on the selected backdrop in dropdown
     def set_active_backdrop(self, selected_url):
         self.active_backdrop = selected_url
-        self.backdrop_menu_label.config(text=selected_url)
-        self.update_css_file()
+        self.backdrop_manager.update_css_file(self.active_backdrop, self.theme_config[2])
 
-        if self.text and os.path.exists(self.css_file_path):
-            with open(self.css_file_path, "r") as file:
-                css_content = file.read()
-                self.text.delete(1.0, tk.END)
-                self.text.insert(tk.END, self.get_backdrop_section(css_content))
-
-    # Find backdrop section within the theme section of the file
-    def get_backdrop_section(self, css_content):
-        backdrops = list()
-        for line in css_content.split("\n"):
-            if "--background-image:" in line:
-                backdrops.append(line)
-        return "Backdrop list:\n" + "\n".join(backdrops)
+        # Highlight the selected image in the preview
+        if self.img_preview_instance:
+            self.img_preview_instance.highlight_image(selected_url)
 
     # Add the backdrop url to the file when button is clicked
     def add_backdrop_to_css(self):
         link = self.backdrop_entry.get()
-        # Regex for valid url extension types that aren't empty
         if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
-            with open(SoftXGUI.css_file_path, "r") as file:
+            with open(self.css_file_path, "r") as file:
                 css_content = file.readlines()
 
-            # Get index of the last backdrop
-            index_last_backdrop = len(css_content) - 1
-            for i, line in reversed(list(enumerate(css_content))):
-                if "--background-image:" in line:
-                    index_last_backdrop = i
-                    break
-            
-            # Check if link is present in file
-            if not any(f"url({link})" in line for line in css_content):
-                with open(SoftXGUI.css_file_path, "w") as file:
-                    # Write each line of the CSS content
-                    for i, line in enumerate(css_content):
-                        file.write(line)
-                        # If at given last backdrop index, insert backdrop below it
-                        if i == index_last_backdrop:
-                            file.write(f"/*--background-image: url({link});*/\n")
-                    
-                self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))
-                self.backdrop_entry.delete(0, tk.END)
-            else:
+            # Check if the link is already present in the file
+            if any(f"url({link})" in line for line in css_content):
                 messagebox.showerror("Error", "This link is already present in the list of backdrops.")
+                return
+
+            # Find the index where the new backdrop should be added
+            backdrop_index = -1
+            for i, line in enumerate(css_content):
+                if self.theme_config[2] in line and "url(" in line:
+                    backdrop_index = i
+                # bg blur comment fencepost fix
+                elif line.strip().startswith("--background-blur"):
+                    break
+
+            with open(self.css_file_path, "w") as file:
+                for i, line in enumerate(css_content):
+                    file.write(line)
+                    if i == backdrop_index:
+                        file.write(f"/*{self.theme_config[2]} url({link});*/\n")
+
+            self.backdrop_menu['menu'].add_command(label=link, command=lambda u=link: self.set_active_backdrop(u))
+            self.backdrop_entry.delete(0, tk.END)
+            self.update_image_previews()
         else:
             messagebox.showerror("Error", "Please enter a valid URL with a .png, .jpg/jpeg, or .gif extension.")
 
-
-
-    # Check if backdrop is already commented to prevent appending additional comments
-    def is_backdrop_commented(self, line):
-        return line.strip().startswith("/*") and line.strip().endswith("*/")
-
-    # Update file with active backdrop
-    def update_css_file(self):
-        if self.active_backdrop:
-            with open(SoftXGUI.css_file_path, "r") as file:
-                lines = file.readlines()
-
-            with open(SoftXGUI.css_file_path, "w") as file:
-                for line in lines:
-                    # Split line at the semicolon and write only backdrop without initial file comments
-                    if "Background image |" in line:
-                        line = line.split(';')[0].strip() + ';\n'
-                        line = line.strip("/*") # strip leading comment
-                        file.write(line)
-                    # Handle other backdrops normally
-                    elif "--background-image:" in line:
-                        if self.active_backdrop in line:
-                            if self.is_backdrop_commented(line):
-                                file.write(line.replace("/*", "").replace("*/", ""))
-                            else:
-                                file.write("/*" + line.strip() + "*/\n")
-                        elif not self.is_backdrop_commented(line):
-                            file.write("/*" + line.strip() + "*/\n")
-                        else:
-                            file.write(line)
-                    else:
-                        file.write(line)
+  # Update the image previews when adding new backdrop
+    def update_image_previews(self):
+        if self.img_preview_instance:
+            with open(self.css_file_path, "r") as file:
+                css_content = file.read()
+                img_urls = ImagePreview.extract_image_urls(css_content, self.theme_config[2])
+                self.img_preview_instance.img_urls = img_urls
+                self.img_preview_instance.load_images()
