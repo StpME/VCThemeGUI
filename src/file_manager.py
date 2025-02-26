@@ -34,7 +34,4 @@ class FileManager:
         except FileNotFoundError:
             print(f"Warning: version.txt not found. Using default version: v1.0.0")
             return "v1.0.0"
-
-
-
     
