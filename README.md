@@ -1,10 +1,9 @@
 # VCThemeGUI
 
-This is a simple GUI for editing the CSS for specifically editing the **backdrop/background** of Discord+ and SoftX, themes for Vencord and BetterDiscord. It allows you to set the backdrop of the current theme by selecting an existing or added url to an image (.png, .jpg, .jpeg, .gif) from the dropdown instead of going into the file yourself and manually editing or commenting out images.
+This is a simple GUI for editing the CSS for specifically editing the **backdrop/background** of modified Discord themes. It allows you to set the backdrop of the current theme by selecting an existing or added url to an image (.png, .jpg, .jpeg, .gif) from the dropdown instead of going into the file yourself and manually editing or commenting out images.
 
 This allows you to more easily store multiple backdrops for the theme and swap between them within a simple interface without having to work within the text css file itself for simpler access.
 
-****This was made for personal Vencord use and I have not tested for other clients, but the css files should be same except for directory locations.**
 
 ### -----------------------------------------------------------------------
 ## How to use:
@@ -14,7 +13,7 @@ This allows you to more easily store multiple backdrops for the theme and swap b
     - Loaded images can also be clicked to select a backdrop instead.
 - Use **Add Backdrop** to add new backdrops into the file and Backdrop menu
     - Only supports image/gif links with common appropriate extensions (.png, .jpg, .jpeg, .gif)
-         - Can upload a local image to [Imgur](https://imgur.com/upload) or other media sites then open your uploaded image in a new tab and copy that link to be inserted as a backdrop (See GIF examples below)
+         - Can upload a local image to [Imgur](https://imgur.com/upload) or other media sites and copy that image link to be inserted as a backdrop (See GIF examples below)
 
 **Imgur Demo:**
 
@@ -44,7 +43,7 @@ Download the current build **[here](https://github.com/StpME/VCThemeGUI/releases
 Check **[releases](https://github.com/StpME/VCThemeGUI/releases).**
 ### -----------------------------------------------------------------------
 
-VCThemeGUI is a personal test/passion project not intended for any public or commercial use, all credits for themes and clients here:
+VCThemeGUI is a personal passion project, all credits for themes and clients here:
 
 # [Discord](https://discord.com/download)
 ## [Discord+](https://plusinsta.github.io/discord-plus/)
