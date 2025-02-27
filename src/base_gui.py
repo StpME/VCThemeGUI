@@ -1,6 +1,6 @@
 import os
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 from image_preview import ImagePreview
 from PIL import Image, ImageTk
 from setup import Setup
@@ -20,6 +20,7 @@ class BaseGUI:
             self.backdrop_options = None
             self.backdrop_entry = None
             self.add_backdrop_btn = None
+            self.active_backdrop = None
             
 
              # Get current version and set up the updater
@@ -30,6 +31,9 @@ class BaseGUI:
             
             # Menu Github icon
             self.github_icon = None
+
+            # Bind delete key for deleting selected backdrops
+            self.root.bind("<Delete>", lambda event: self.delete_backdrop())
 
     # Create the cascading file menu for the GUI
     def setup_menu(self):
@@ -102,6 +106,46 @@ class BaseGUI:
         # Highlight the selected image in the preview
         if self.img_preview_instance:
             self.img_preview_instance.highlight_image(selected_url)
+
+    # Delete the selected backdrop from the CSS file
+    def delete_backdrop(self):
+        selected_url = self.active_backdrop
+        print(f"Selected URL to delete: {selected_url}") #debug
+        if selected_url and selected_url != "Select Backdrop":
+            # Confirm deletion with user
+            confirm = messagebox.askyesno("Delete Backdrop", f"Are you sure you want to delete '{selected_url}'?")
+            if confirm:
+                # Read the CSS file
+                with open(self.css_file_path, "r") as file:
+                    lines = file.readlines()
+
+                # Rewrite the updated CSS file without the line(s) of the selected URL
+                with open(self.css_file_path, "w") as file:
+                    for line in lines:
+                        if f"url({selected_url})" not in line:
+                            file.write(line)
+
+                # Remove the backdrop from the dropdown menu
+                self.backdrop_menu['menu'].delete(0, 'end')
+                self.backdrop_menu['menu'].add_command(label="Select Below", state="disabled")
+                self.backdrop_menu['menu'].add_separator()
+
+                # Re-extract and populate the dropdown with updated backdrops
+                with open(self.css_file_path, "r") as file:
+                    css_content = file.read()
+                    backdrop_urls = self.extract_backdrops(css_content)
+                    if isinstance(backdrop_urls, tuple):  # Handle l+d theme sections
+                        backdrop_urls = backdrop_urls[0] + backdrop_urls[1]
+                    uniq_list = list(dict.fromkeys(backdrop_urls))
+                    self.populate_dropdown(uniq_list)
+
+                # Update the image previews
+                self.update_image_previews()
+
+                # Notify user of successful deletion
+                messagebox.showinfo("Backdrop Deleted", f"'{selected_url}' has been deleted.")
+        else: # Notify user if no backdrop is currently selected to delete
+            messagebox.showwarning("No Backdrop Selected", "Please select a backdrop to delete.")
 
     # Update the image previews when adding new backdrop
     def update_image_previews(self):
