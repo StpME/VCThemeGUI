@@ -24,10 +24,10 @@ class GUISelector:
         button_frame = tk.Frame(self.root)
         button_frame.pack(expand=True)
 
-        dsc_button = tk.Button(button_frame, text="DSCPlusGUI", command=self.load_dsc_gui)
+        dsc_button = tk.Button(button_frame, text="Discord+", command=self.load_dsc_gui)
         dsc_button.pack(padx=10, pady=10)  
 
-        softx_button = tk.Button(button_frame, text="SoftXGUI", command=self.load_softx_gui)
+        softx_button = tk.Button(button_frame, text="SoftX", command=self.load_softx_gui)
         softx_button.pack(padx=10, pady=10)
 
     def load_dsc_gui(self):
