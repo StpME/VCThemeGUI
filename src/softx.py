@@ -10,10 +10,10 @@ from base_gui import BaseGUI
 class SoftXGUI(BaseGUI):
     def __init__(self, root):
         # Theme configuration
-        self.theme_config = ["SoftX", 0, "--background-image"]
+        self.theme_config = ["SoftX", "SoftX", "--background-image"]
 
         self.username = os.getlogin()
-        self.css_file_path = None
+        self.css_file_path = f"C:\\Users\\{self.username}\\AppData\\Roaming\\Vencord\\themes\\{self.theme_config[1]}.theme.css"
 
         # Initialize file and backdrop managers
         self.file_manager = FileManager(self.theme_config)

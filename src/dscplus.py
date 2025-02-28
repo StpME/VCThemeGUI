@@ -13,8 +13,8 @@ class DSCPlusGUI(BaseGUI):
         self.theme_config = ["Discord+", "DiscordPlus", "--dplus-backdrop"]
 
         self.username = os.getlogin()
-        self.css_file_path = None
-        
+        self.css_file_path = f"C:\\Users\\{self.username}\\AppData\\Roaming\\Vencord\\themes\\{self.theme_config[1]}.theme.css"
+
         # Initialize file and backdrop managers
         self.file_manager = FileManager(self.theme_config)
         self.backdrop_manager = BackdropManager(self.css_file_path)
