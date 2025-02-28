@@ -175,9 +175,6 @@ class BaseGUI:
             with open(self.css_file_path, "r") as file:
                 lines = file.readlines()
 
-
-
-
             # Insert the last deleted URL at its original position(s)
             for pos in self.last_deleted_pos_list:
                 # Ensure spacing consistency
@@ -187,9 +184,6 @@ class BaseGUI:
                 if 0 <= pos < len(lines):
                     # Insert the restored line without adding extra blank lines
                     lines.insert(pos, restored_line)
-
-
-
 
             # Write the updated CSS file
             with open(self.css_file_path, "w") as file:

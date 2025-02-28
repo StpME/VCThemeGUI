@@ -13,7 +13,7 @@ class SoftXGUI(BaseGUI):
         self.theme_config = ["SoftX", 0, "--background-image"]
 
         self.username = os.getlogin()
-        self.css_file_path = f"C:\\Users\\{self.username}\\AppData\\Roaming\\Vencord\\themes\\SoftX.theme.css"
+        self.css_file_path = None
 
         # Initialize file and backdrop managers
         self.file_manager = FileManager(self.theme_config)
@@ -53,6 +53,10 @@ class SoftXGUI(BaseGUI):
 
     # Add a new backdrop URL to the CSS file
     def add_backdrop_to_css(self):
+        # First check if a file has been loaded
+        if self.css_file_path is None or not os.path.exists(self.css_file_path):
+            messagebox.showerror("Error", "Please load a CSS file before adding a backdrop.")
+            return
         link = self.backdrop_entry.get()
         if link and re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$', link):
             with open(self.css_file_path, "r") as file:
