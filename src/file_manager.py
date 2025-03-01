@@ -37,7 +37,6 @@ class FileManager:
             base_path = os.path.dirname(os.path.abspath(__file__))
         return os.path.join(base_path, relative_path)
 
-    # Read CSS file and extract image URLs
     def extract_urls(self, file_path):
         """
         Extract image URLs from the selected CSS file.
@@ -60,7 +59,6 @@ class FileManager:
             print(f"Error reading CSS file: {e}")
             return None, []
 
-    # Read current version from file or return default version
     def get_version(self):
         """
         Retrieve the current version from a version file,

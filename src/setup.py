@@ -22,7 +22,7 @@ class Setup:
         dark_frame.pack(fill="x")
 
         # Create instruction header label frame
-        label_frame = tk.Frame(dark_frame, bg="lightgray") 
+        label_frame = tk.Frame(dark_frame, bg="lightgray")
         label_frame.pack(fill="x", pady=2)
 
         label = tk.Label(label_frame, text=("Select " + gui_name +

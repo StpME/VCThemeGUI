@@ -49,7 +49,6 @@ class ImagePreview:
         # Bind resize event to adjust window layout with images
         root.bind("<Configure>", self.on_resize)
 
-    # Checks for valid extensions on image urls so they can be displayed
     def is_valid_image_url(self, url):
         """
         Check if the url has a valid, supported image extension.
@@ -219,7 +218,6 @@ class ImagePreview:
                            padx=5, pady=5, sticky="nsew")
         self.update_scrollregion()
 
-    # Helper method to calculate num columns based on current width
     def get_num_columns(self):
         """
         Calculate the number of columns based on the current window width.
