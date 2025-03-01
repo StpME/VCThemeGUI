@@ -22,7 +22,7 @@ class Setup:
         dark_frame.pack(fill="x")
 
         # Create instruction header label frame
-        label_frame = tk.Frame(dark_frame, bg="lightgray")
+        label_frame = tk.Frame(dark_frame, bg="lightgray") 
         label_frame.pack(fill="x", pady=2)
 
         label = tk.Label(label_frame, text=("Select " + gui_name +
@@ -46,6 +46,7 @@ class Setup:
         self.backdrop_menu.pack(side="left")
         self.backdrop_menu['menu'].entryconfig(0, state="disabled")
         self.backdrop_menu['menu'].add_separator()
+        self.backdrop_menu.configure(direction="above")
 
         self.add_backdrop_btn = tk.Button(btm_frame, text="Add Backdrop",
                                           command=self.add_backdrop_to_css,
