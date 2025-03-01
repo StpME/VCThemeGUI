@@ -215,7 +215,8 @@ class ImagePreview:
         """
         for i, img_label in enumerate(self.img_labels):
             img_label.grid(row=i // self.get_num_columns(),
-                           column=i % self.get_num_columns(), padx=5, pady=5)
+                           column=i % self.get_num_columns(),
+                           padx=5, pady=5, sticky="nsew")
         self.update_scrollregion()
 
     # Helper method to calculate num columns based on current width
@@ -224,9 +225,17 @@ class ImagePreview:
         Calculate the number of columns based on the current window width.
 
         Returns:
-            (int): The number of columns to display in the grid
+            num_cols (int): The number of columns to display in the grid
         """
-        return max(1, self.root.winfo_width() // 160)
+        # Calculate the available width for the grid
+        scrollbar_width = self.scrollbar.winfo_width()
+        avail_width = self.root.winfo_width() - scrollbar_width
+
+        # Calculate the width of each image preview (including ~x padding)
+        img_width = self.preview_size[0] + 10
+
+        num_columns = max(1, avail_width // img_width)
+        return num_columns
 
     def update_scrollregion(self, event=None):
         """
