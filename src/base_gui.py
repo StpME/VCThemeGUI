@@ -67,7 +67,7 @@ class BaseGUI:
 
     # Open and handle CSS file, updating GUI with its values
     def open_file(self):
-        init_dir = os.path.join(os.environ['APPDATA'], 'Vencord', 'themes')
+        init_dir = os.path.join(os.environ['APPDATA'], 'Vencord', 'themes') # Nav location on Open
         file_path = filedialog.askopenfilename(initialdir=init_dir, filetypes=[("CSS files", "*.css")])
         if file_path:
             self.backdrop_options = tk.StringVar(value="Select Backdrop")
@@ -98,6 +98,8 @@ class BaseGUI:
 
                     uniq_list = list(dict.fromkeys(backdrop_urls))
                     self.populate_dropdown(uniq_list)
+            return file_path
+        return None
 
 
     # Fill in dropdown menu with extracted urls

@@ -13,11 +13,11 @@ class SoftXGUI(BaseGUI):
         self.theme_config = ["SoftX", "SoftX", "--background-image"]
 
         self.username = os.getlogin()
-        self.css_file_path = f"C:\\Users\\{self.username}\\AppData\\Roaming\\Vencord\\themes\\{self.theme_config[1]}.theme.css"
+        self.css_file_path = None
 
         # Initialize file and backdrop managers
         self.file_manager = FileManager(self.theme_config)
-        self.backdrop_manager = BackdropManager(self.css_file_path)
+        self.backdrop_manager = BackdropManager(None)
 
         # Initialize base class template
         super().__init__(root, self.theme_config, self.file_manager, self.backdrop_manager)
@@ -50,6 +50,13 @@ class SoftXGUI(BaseGUI):
                 if backdrop_url not in backdrop_urls:
                     backdrop_urls.append(backdrop_url)
         return backdrop_urls
+    
+    # Override base method to allow for backdrop manager initialization
+    def open_file(self):
+        file_path = super().open_file()
+        if file_path:
+            self.css_file_path = file_path
+            self.backdrop_manager = BackdropManager(self.css_file_path)
 
     # Add a new backdrop URL to the CSS file
     def add_backdrop_to_css(self):

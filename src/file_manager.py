@@ -2,6 +2,7 @@ import sys
 import os
 from image_preview import ImagePreview
 
+
 class FileManager:
     def __init__(self, config):
         self.theme_config = config
@@ -25,8 +26,8 @@ class FileManager:
             print(f"Error reading CSS file: {e}")
             return None, []
     
+    # Read current version from file or return default version
     def get_version(self):
-        # Read current version num from txt or return default version if missing/error
         version_file_path = self.file_path("version.txt")
         try:
             with open(version_file_path, "r") as version_file:
