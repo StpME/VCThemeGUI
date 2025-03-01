@@ -1,5 +1,5 @@
-from dscplus import DSCPlusGUI
-from softx import SoftXGUI
+from themes.dscplus import DSCPlusGUI
+from themes.softx import SoftXGUI
 import tkinter as tk
 
 
