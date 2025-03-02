@@ -21,7 +21,7 @@ This allows you to more easily store multiple backdrops for the theme and swap b
 
 **GUI Demo:**
 
-![](src/img/gui_demo_core.gif)
+![](src/img/gui_demo_1.3.4.gif)
 
 (Find/upload image → open image in new tab → copy image url for use)
 
@@ -35,13 +35,15 @@ OR
 **_Currently has support for Vencord's default file directory, others can be found manually_
 
 ### -----------------------------------------------------------------------
-## Install:
-Download the current build **[here](https://github.com/StpME/VCThemeGUI/releases/download/v1.3.3/VCTheme_v1.3.3.exe)**.
-
-**OR**
-
-Check **[releases](https://github.com/StpME/VCThemeGUI/releases).**
+## Installation:
+Download latest version from **[releases](https://github.com/StpME/VCThemeGUI/releases).** 
 ### -----------------------------------------------------------------------
+## Updating:
+ Within the **File** menu, press **Check for Updates** to fetch and replace the current program with the most recent release.
+
+ 
+### -----------------------------------------------------------------------
+
 
 VCThemeGUI is a personal passion project, all credits for themes and clients here:
 
