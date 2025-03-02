@@ -36,7 +36,7 @@ OR
 
 ### -----------------------------------------------------------------------
 ## Install:
-Download the current build **[here](https://github.com/StpME/VCThemeGUI/releases/download/v1.3.2/VCTheme_v1.3.2.exe)**.
+Download the current build **[here](https://github.com/StpME/VCThemeGUI/releases/download/v1.3.3/VCTheme_v1.3.3.exe)**.
 
 **OR**
 
