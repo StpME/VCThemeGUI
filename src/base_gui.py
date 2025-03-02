@@ -42,7 +42,8 @@ class BaseGUI:
         self.current_version = self.file_manager.get_version()
         self.repo = Setup.REPO
         self.exe_name = Setup.EXE_NAME
-        self.updater = Updater(self.current_version, self.repo, self.exe_name)
+        self.updater = Updater(self.current_version, self.repo,
+                               self.exe_name, self.root)
 
         # Menu Github icon
         self.github_icon = None

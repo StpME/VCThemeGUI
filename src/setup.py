@@ -8,7 +8,7 @@ class Setup:
     including program layout and event key bindings.
     """
     REPO = "StpME/VCThemeGUI"
-    EXE_NAME = "VCTheme.exe"
+    EXE_NAME = "VCTheme"
 
     def setup_gui(self, gui_name):
         """
