@@ -134,6 +134,32 @@ class BaseGUI:
             return file_path
         return None
 
+    def extract_backdrops(self, css_text):
+        """
+        Extract existing backdrop urls from the CSS file.
+        Preserves the order of urls and avoids duplicates.
+
+        Args:
+            css_text (string): The CSS file content.
+
+        Returns:
+            list: A list of backdrop urls in descending order from CSS file.
+        """
+        backdrop_urls = []
+        lines = css_text.split("\n")
+        for line in lines:
+            # Check if the line contains the backdrop property and a URL
+            if self.theme_config[2] in line and "url(" in line:
+                # Extract the URL from the line
+                url_start = line.find("url(") + 4  # After "url(" for img url
+                url_end = line.find(")", url_start)  # Find the closing ")"
+                backdrop_url = line[url_start:url_end].strip()
+
+                # Add the URL to the list if unique
+                if backdrop_url and backdrop_url not in backdrop_urls:
+                    backdrop_urls.append(backdrop_url)
+        return backdrop_urls
+
     def populate_dropdown(self, backdrop_urls):
         """
         Populate the dropdown menu with extracted backdrop urls.
@@ -141,15 +167,15 @@ class BaseGUI:
         Args:
             backdrop_urls (list): Backdrop urls to add to the dropdown menu.
         """
-        self.backdrop_options.set("")
-        uniq_urls = list()
+        # Reset the dropdown except descriptor and separator
+        menu = self.backdrop_menu['menu']
+        menu.delete(2, 'end')
+
         for url in backdrop_urls:
-            if url not in uniq_urls:
-                self.backdrop_menu['menu'].add_command(
-                    label=url,
-                    command=lambda u=url:
-                    self.set_active_backdrop(u))
-                uniq_urls.append(url)
+            menu.add_command(
+                label=url,
+                command=lambda u=url: self.set_active_backdrop(u)
+            )
 
     def set_active_backdrop(self, selected_url):
         """

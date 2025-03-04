@@ -51,22 +51,6 @@ class SoftXGUI(BaseGUI):
 
         self.setup_menu()
 
-    def extract_backdrops(self, css_text):
-        """
-        Extract existing backdrop urls from the CSS file.
-
-        Args:
-            css_text (string): The CSS file content.
-        """
-        backdrop_urls = []
-        lines = css_text.split("\n")
-        for line in lines:
-            if self.theme_config[2] in line and "|" not in line:
-                backdrop_url = line.split("url(")[1].split(")")[0]
-                if backdrop_url not in backdrop_urls:
-                    backdrop_urls.append(backdrop_url)
-        return backdrop_urls
-
     def open_file(self):
         """
         Open a file dialog to select a CSS file.
@@ -76,6 +60,11 @@ class SoftXGUI(BaseGUI):
         if file_path:
             self.css_file_path = file_path
             self.backdrop_manager = BackdropManager(self.css_file_path)
+            with open(file_path, "r") as file:
+                css_content = file.read()
+                backdrop_urls = self.extract_backdrops(css_content)
+
+            self.populate_dropdown(backdrop_urls)
 
     def add_backdrop_to_css(self):
         """
