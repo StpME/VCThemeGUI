@@ -1,5 +1,6 @@
 from themes.dscplus import DSCPlusGUI
 from themes.softx import SoftXGUI
+from themes.clearvis import ClearVisGUI
 import tkinter as tk
 
 
@@ -46,6 +47,11 @@ class GUISelector:
                                  command=lambda: self.load_gui("SoftXGUI"))
         softx_button.pack(padx=10, pady=10)
 
+        clearvis_button = tk.Button(button_frame, text="ClearVision",
+                                    command=lambda: self.load_gui(
+                                        "ClearVisionGUI"))
+        clearvis_button.pack(padx=10, pady=10)
+
 
 def main():
     """
@@ -78,6 +84,8 @@ def main():
             DSCPlusGUI(new_root)
         elif gui_name == "SoftXGUI":
             SoftXGUI(new_root)
+        elif gui_name == "ClearVisionGUI":
+            ClearVisGUI(new_root)
         else:
             raise ValueError(f"Unknown value: {gui_name}")
 

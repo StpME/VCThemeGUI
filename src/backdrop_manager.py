@@ -18,8 +18,8 @@ class BackdropManager:
 
         Args:
             active_backdrop (string): The selected backdrop URL.
-            bg_str (string): The theme specific CSS text used
-            to identify backdrop lines, set by the theme config.
+            bg_str (string): The theme-specific CSS text used
+            to identify backdrop lines.
         """
         if active_backdrop:
             with open(self.css_file_path, "r") as file:
@@ -29,10 +29,20 @@ class BackdropManager:
                 for line in lines:
                     if bg_str in line and "url(" in line:
                         if active_backdrop in line:
-                            # Uncomment only active backdrop
                             if self.is_backdrop_commented(line):
-                                file.write(line.replace("/*", "")
-                                           .replace("*/", ""))
+                                # Remove the first /* and the last */
+                                uncomm_line = line.replace("/*",
+                                                           "", 1).rstrip()
+                                # Find the last occurrence of */ and remove it
+                                last_comment_end = uncomm_line.rfind("*/")
+                                if last_comment_end != -1:
+                                    uncomm_line = uncomm_line[
+                                        :last_comment_end].rstrip()
+                                # Ensure the line ends with a semicolon
+                                # ONLY if it doesn't already
+                                if not uncomm_line.strip().endswith(";"):
+                                    uncomm_line = uncomm_line.rstrip() + ";"
+                                file.write(uncomm_line + "\n")
                             else:
                                 file.write(line)
                         else:
