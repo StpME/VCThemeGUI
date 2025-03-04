@@ -1,4 +1,5 @@
 import os
+import re
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from image_preview import ImagePreview
@@ -191,6 +192,64 @@ class BaseGUI:
         # Highlight the selected image in the preview
         if self.img_preview_instance:
             self.img_preview_instance.highlight_image(selected_url)
+
+    def add_backdrop_to_css(self):
+        """
+        Add a new backdrop URL to the CSS file.
+        Handles themes with a single backdrop property.
+        Includes checks for loaded file, duplicates and valid url formats.
+
+        Args:
+            link (string): The backdrop URL to add.
+        """
+        link = self.backdrop_entry.get()
+        # Check if a file has been loaded
+        if not self.css_file_path or not os.path.exists(self.css_file_path):
+            messagebox.showerror(
+                "Error",
+                "Please load a CSS file before adding a backdrop.")
+            return
+
+        # Validate url format
+        if not link or not re.match(r'^https?:\/\/.*\.(png|jpg|jpeg|gif)$',
+                                    link):
+            messagebox.showerror(
+                "Error",
+                "Please enter a valid URL with a .png, "
+                ".jpg/jpeg, or .gif extension.")
+            return
+
+        # Read the CSS file
+        with open(self.css_file_path, "r") as file:
+            css_content = file.readlines()
+
+        # Check for duplicate links
+        if any(f"url({link})" in line for line in css_content):
+            messagebox.showerror(
+                "Error",
+                "This link is already present in the list of backdrops.")
+            return
+
+        # Find the index where the new backdrop should be added
+        backdrop_index = -1
+        for i, line in enumerate(css_content):
+            if self.theme_config[2] in line and "url(" in line:
+                backdrop_index = i
+
+        # Write the updated CSS file
+        with open(self.css_file_path, "w") as file:
+            for i, line in enumerate(css_content):
+                file.write(line)
+                if i == backdrop_index:
+                    file.write(f"/*{self.theme_config[2]}: url({link});*/\n")
+
+        # Update the dropdown & image previews
+        self.backdrop_menu['menu'].add_command(
+            label=link,
+            command=lambda u=link: self.set_active_backdrop(u)
+        )
+        self.backdrop_entry.delete(0, tk.END)
+        self.update_image_previews()
 
     def delete_backdrop(self):
         """
