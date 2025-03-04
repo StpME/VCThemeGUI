@@ -5,7 +5,7 @@ This is a simple GUI for editing the CSS for specifically editing the **backdrop
 This allows you to more easily store multiple backdrops for the theme and swap between them within a simple interface without having to work within the text css file itself for simpler access.
 
 
-### -----------------------------------------------------------------------
+
 ## How to use:
 -  Open the program (VCTheme.exe)
 - Go to File → Open in top left corner, then select the theme CSS file for your Discord.
@@ -34,22 +34,25 @@ OR
 
 **_Currently has support for Vencord's default file directory, others can be found manually_
 
-### -----------------------------------------------------------------------
+
 ## Installation:
 Download latest version from **[releases](https://github.com/StpME/VCThemeGUI/releases).** 
-### -----------------------------------------------------------------------
+
 ## Updating:
  Within the **File** menu, press **Check for Updates** to fetch and replace the current program with the most recent release.
 
  
-### -----------------------------------------------------------------------
+
 
 
 VCThemeGUI is a personal passion project, all credits for themes and clients here:
 
 # [Discord](https://discord.com/download)
-## [Discord+](https://plusinsta.github.io/discord-plus/)
-## [SoftX](https://betterdiscord.app/theme/SoftX)
+### [Discord+](https://plusinsta.github.io/discord-plus/)
+### [SoftX](https://betterdiscord.app/theme/SoftX)
+### [ClearVision](https://betterdiscord.app/theme/ClearVision)
+
+#### ----------------------------------------------------------------------------------------
 ### [Vencord](https://vencord.dev/)
 ### [BetterDiscord](https://betterdiscord.app/)
 
