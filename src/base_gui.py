@@ -360,6 +360,7 @@ class BaseGUI:
                     if isinstance(backdrop_urls, tuple):  # Handle l+d themes
                         backdrop_urls = backdrop_urls[0] + backdrop_urls[1]
                     uniq_list = list(dict.fromkeys(backdrop_urls))
+                    self.set_active_backdrop(uniq_list[0])
                     self.populate_dropdown(uniq_list)
 
                 # Update the image previews
