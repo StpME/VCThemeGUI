@@ -415,6 +415,9 @@ class BaseGUI:
             # Update the image previews
             self.update_image_previews()
 
+            # Set the restored backdrop to active again so active isn't empty
+            self.set_active_backdrop(self.last_deleted_url)
+
             # Update sub label with deleted link notice
             self.sub_label.config(
                     text=f"Restored ({self.last_deleted_url}) to "
