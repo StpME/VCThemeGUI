@@ -120,6 +120,14 @@ class DSCPlusGUI(BaseGUI):
                 self.backdrop_menu['menu'].add_command(
                     label=link,
                     command=lambda u=link: self.set_active_backdrop(u))
+
+                # Update sub label with the new link added
+                self.sub_label.config(
+                    text=f"Added ({link}) to list of backdrops",
+                    font=("Arial", 9)
+                )
+                self.sub_label.pack()
+
                 self.backdrop_entry.delete(0, tk.END)
                 self.update_image_previews()
             else:  # Check if the link is already present in the file

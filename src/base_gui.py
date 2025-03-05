@@ -299,6 +299,13 @@ class BaseGUI:
                 if i == backdrop_index:
                     file.write(f"/*{self.theme_config[2]}: url({link});*/\n")
 
+        # Update sub label with the new link added
+        self.sub_label.config(
+                text=f"Added ({link}) to list of backdrops",
+                font=("Arial", 9)
+            )
+        self.sub_label.pack()
+
         # Update the dropdown & image previews
         self.backdrop_menu['menu'].add_command(
             label=link,
@@ -357,6 +364,15 @@ class BaseGUI:
                 # Notify user of successful deletion
                 messagebox.showinfo("Backdrop Deleted",
                                     f"'{selected_url}' has been deleted.")
+
+                # Update sub label with deleted link notice
+                self.sub_label.config(
+                        text=f"Deleted ({selected_url}) from "
+                        "list of backdrops",
+                        font=("Arial", 9)
+                    )
+                self.sub_label.pack()
+
         else:  # Notify user if no backdrop is currently selected to delete
             messagebox.showwarning("No Backdrop Selected",
                                    "Please select a backdrop to delete.")
@@ -398,6 +414,14 @@ class BaseGUI:
 
             # Update the image previews
             self.update_image_previews()
+
+            # Update sub label with deleted link notice
+            self.sub_label.config(
+                    text=f"Restored ({self.last_deleted_url}) to "
+                    "list of backdrops",
+                    font=("Arial", 9)
+                )
+            self.sub_label.pack()
 
             # Notify user of successful restoration
             messagebox.showinfo(
