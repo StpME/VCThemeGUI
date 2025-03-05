@@ -227,10 +227,9 @@ class BaseGUI:
         # Reset the dropdown except descriptor and separator
         menu = self.backdrop_menu['menu']
         menu.delete(2, 'end')
-        count = 0
 
         for url in backdrop_urls:
-            count += 1
+            count = menu.index('end')
             menu.add_command(
                 label=f"({count}) {url}",
                 command=lambda u=url: self.set_active_backdrop(u)
@@ -309,8 +308,11 @@ class BaseGUI:
         self.sub_label.pack()
 
         # Update the dropdown & image previews
-        self.backdrop_menu['menu'].add_command(
-            label=link,
+        menu = self.backdrop_menu['menu']
+        count = menu.index("end")
+
+        menu.add_command(
+            label=f"({count}) {link}",
             command=lambda u=link: self.set_active_backdrop(u)
         )
         self.backdrop_entry.delete(0, tk.END)

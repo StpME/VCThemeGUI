@@ -117,8 +117,11 @@ class DSCPlusGUI(BaseGUI):
                             file.write(
                                 f"/*{self.theme_config[2]}: url({link});*/\n")
 
-                self.backdrop_menu['menu'].add_command(
-                    label=link,
+                menu = self.backdrop_menu['menu']
+                count = menu.index("end")
+
+                menu.add_command(
+                    label=f"({count}) {link}",
                     command=lambda u=link: self.set_active_backdrop(u))
 
                 # Update sub label with the new link added
