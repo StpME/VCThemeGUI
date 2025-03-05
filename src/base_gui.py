@@ -38,6 +38,7 @@ class BaseGUI:
         self.backdrop_entry = None
         self.add_backdrop_btn = None
         self.active_backdrop = None
+        self.header_label = None
 
         # Get current version and set up the updater
         self.current_version = self.file_manager.get_version()
@@ -55,6 +56,9 @@ class BaseGUI:
         # Track the last deleted backdrop URL and position
         self.last_deleted_url = None
         self.last_deleted_pos_list = []
+
+        # self.status_label = tk.Label(root, text="Ready", fg="grey50")
+        # self.status_label.pack(side="bottom", fill="x")
 
         # Bind Ctrl+Z shortcut for restoring the last deleted backdrop
         self.root.bind("<Control-z>", lambda event: self.restore_last())
@@ -156,13 +160,27 @@ class BaseGUI:
         with open(file_path, "r"):
             css_content, img_urls = self.file_manager.extract_urls(file_path)
             if css_content and img_urls:
+
+                # Extract backdrops and populate the dropdown
+                backdrop_urls = self.extract_backdrops(css_content)
+
+                # Update label when a file is loaded
+                self.header_label.config(
+                    text="Select a backdrop by clicking on an image"
+                         " or using 'Select Backdrop'",
+                    font=("Arial", 12, "bold")
+                )
+                self.sub_label.config(
+                    text=f"Loaded {len(backdrop_urls)} backdrops from: "
+                    f"{os.path.basename(file_path)}",
+                    font=("Arial", 9)
+                )
+                self.sub_label.pack()
+
                 # Create and store the ImagePreview instance
                 self.img_preview_instance = ImagePreview(
                     self.img_grid_frame, img_urls,
                     onclick=self.set_active_backdrop)
-
-                # Extract backdrops and populate the dropdown
-                backdrop_urls = self.extract_backdrops(css_content)
 
                 # Check for tuple backdrops in case of light + dark themes
                 if isinstance(backdrop_urls, tuple):

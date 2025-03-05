@@ -25,14 +25,20 @@ class Setup:
         label_frame = tk.Frame(dark_frame, bg="lightgray")
         label_frame.pack(fill="x", pady=2)
 
-        label = tk.Label(label_frame, text=("Select " + gui_name +
-                         " theme from File menu"),
-                         font=("Arial", 12), bg="lightgray")
-        label.pack()
-
-        # Text shown for main window
-        self.text = tk.Text(self.root, wrap="word")
-        self.text.pack(expand=True, fill="both")
+        self.header_label = tk.Label(
+            label_frame,
+            text=f"Select {gui_name} theme from File menu",
+            font=("Arial", 12, "bold"),
+            bg="lightgray"
+        )
+        # Initialize sub label, is only packed in GUI on file load
+        self.sub_label = tk.Label(
+            label_frame,
+            text="",
+            font=("Arial", 9),
+            bg="lightgray"
+        )
+        self.header_label.pack()
 
         # Backdrop frame for button and entry box
         btm_frame = tk.Frame(self.root, bg="lightgray",
@@ -43,7 +49,7 @@ class Setup:
         self.backdrop_options = tk.StringVar(value="Select Backdrop")
         self.backdrop_menu = tk.OptionMenu(btm_frame, self.backdrop_options,
                                            "Select Below")
-        self.backdrop_menu.pack(side="left")
+        self.backdrop_menu.pack(side="left", padx=2)
         self.backdrop_menu['menu'].entryconfig(0, state="disabled")
         self.backdrop_menu['menu'].add_separator()
         self.backdrop_menu.configure(direction="above")

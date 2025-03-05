@@ -37,9 +37,6 @@ class DSCPlusGUI(BaseGUI):
         self.setup = Setup
         self.setup.setup_gui(self, self.theme_config[0])
 
-        # Remove any existing text widget
-        self.text.destroy()
-
         # Create a new frame for the image grid
         self.img_grid_frame = tk.Frame(self.root)
         self.img_grid_frame.pack(fill="both", expand=True)
