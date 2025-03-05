@@ -84,6 +84,9 @@ class BaseGUI:
         filemenu.add_command(label="Check for Updates",
                              command=self.updater.check_for_updates)
         filemenu.add_separator()
+        filemenu.add_command(label="Select Different GUI",
+                              command=self.return_to_selector)
+        filemenu.add_separator()
         filemenu.add_command(label="Exit",
                              command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
@@ -368,3 +371,25 @@ class BaseGUI:
                     self.theme_config[2])
                 self.img_preview_instance.img_urls = img_urls
                 self.img_preview_instance.load_images()
+
+    def cleanup(self):
+        """
+        Reset common variables and resources.
+        Used for if user wants to return to the GUI selector.
+        """
+        self.css_file_path = None
+        self.backdrop_manager = None
+        self.image_preview_instance = None
+        self.active_backdrop = None
+        self.last_deleted_url = None
+        self.last_deleted_pos_list = []
+        self.backdrop_options = None
+
+    def return_to_selector(self):
+        """
+        Destroy the current GUI and return to the GUI selector.
+        """
+        self.cleanup()
+        self.root.destroy()
+        from main import main
+        main()
