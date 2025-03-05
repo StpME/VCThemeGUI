@@ -85,12 +85,28 @@ class BaseGUI:
                              command=self.updater.check_for_updates)
         filemenu.add_separator()
         filemenu.add_command(label="Select Different GUI",
-                              command=self.return_to_selector)
+                             command=self.return_to_selector)
         filemenu.add_separator()
         filemenu.add_command(label="Exit",
                              command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
         self.root.config(menu=menubar)
+
+    def is_valid_css_file(self, file_path):
+        """
+        Check if the CSS file name contains the expected theme alias.
+
+        Args:
+            file_path (string): The path to the CSS file.
+
+        Returns:
+            (boolean): True if the file name matches the expected theme,
+            False if not.
+        """
+        file_name = os.path.basename(file_path).lower()
+        theme_name = self.theme_config[0].lower()
+        theme_alias = self.theme_config[1].lower()
+        return theme_name in file_name or theme_alias in file_name
 
     def open_file(self):
         """
@@ -100,43 +116,62 @@ class BaseGUI:
             (string): The path to the opened file,
                       or None if no file was selected.
         """
-        init_dir = os.path.join(os.environ['APPDATA'], 'Vencord', 'themes')
-        file_path = filedialog.askopenfilename(
-            initialdir=init_dir, filetypes=[("CSS files", "*.css")])
-        if file_path:
-            self.backdrop_options = tk.StringVar(value="Select Backdrop")
+        while True:
+            init_dir = os.path.join(os.environ['APPDATA'], 'Vencord', 'themes')
+            file_path = filedialog.askopenfilename(
+                initialdir=init_dir, filetypes=[("CSS files", "*.css")])
+            if not file_path:  # user cancels file dialog
+                return None
 
-            # Clear the existing image grid
-            for widget in self.img_grid_frame.winfo_children():
-                widget.destroy()
+            if not self.is_valid_css_file(file_path):
+                # display warning & ask user if they want to continue
+                warning_message = (
+                    f"The selected file does not match the expected theme.\n\n"
+                    f"Expected: {self.theme_config[1]} in the file name.\n"
+                    f"Selected file: {os.path.basename(file_path)}\n\n"
+                    "Do you want to select a different file?"
+                )
+                if messagebox.askyesno("Warning: Incorrect CSS File",
+                                       warning_message):
+                    # recursive call to select diff file
+                    return self.open_file()
+                else:  # user chose to use current file
+                    break
+            else:  # file was already valid
+                break
 
-            # Clear the dropdown menu
-            self.backdrop_menu['menu'].delete(0, 'end')
-            self.backdrop_menu['menu'].add_command(label="Select Below")
-            self.backdrop_menu['menu'].entryconfig(0, state="disabled")
-            self.backdrop_menu['menu'].add_separator()
+        self.backdrop_options = tk.StringVar(value="Select Backdrop")
 
-            # Read the CSS file and extract image URLs
-            with open(file_path, "r"):
-                css_content, img_urls = self.file_manager.extract_urls(
-                    file_path)
-                if css_content and img_urls:
-                    # Create and store the ImagePreview instance
-                    self.img_preview_instance = ImagePreview(
-                        self.img_grid_frame, img_urls,
-                        onclick=self.set_active_backdrop)
+        # Clear the existing image grid
+        for widget in self.img_grid_frame.winfo_children():
+            widget.destroy()
 
-                    # Extract backdrops and populate the dropdown
-                    backdrop_urls = self.extract_backdrops(css_content)
+        # Clear the dropdown menu
+        self.backdrop_menu['menu'].delete(0, 'end')
+        self.backdrop_menu['menu'].add_command(label="Select Below")
+        self.backdrop_menu['menu'].entryconfig(0, state="disabled")
+        self.backdrop_menu['menu'].add_separator()
 
-                    # Check for tuple backdrops in case of light + dark themes
-                    if isinstance(backdrop_urls, tuple):
-                        backdrop_urls = backdrop_urls[0] + backdrop_urls[1]
+        # Read the CSS file and extract image URLs
+        with open(file_path, "r"):
+            css_content, img_urls = self.file_manager.extract_urls(file_path)
+            if css_content and img_urls:
+                # Create and store the ImagePreview instance
+                self.img_preview_instance = ImagePreview(
+                    self.img_grid_frame, img_urls,
+                    onclick=self.set_active_backdrop)
 
-                    uniq_list = list(dict.fromkeys(backdrop_urls))
-                    self.populate_dropdown(uniq_list)
-            return file_path
-        return None
+                # Extract backdrops and populate the dropdown
+                backdrop_urls = self.extract_backdrops(css_content)
+
+                # Check for tuple backdrops in case of light + dark themes
+                if isinstance(backdrop_urls, tuple):
+                    backdrop_urls = backdrop_urls[0] + backdrop_urls[1]
+
+                uniq_list = list(dict.fromkeys(backdrop_urls))
+                self.populate_dropdown(uniq_list)
+
+        return file_path
 
     def extract_backdrops(self, css_text):
         """
