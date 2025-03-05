@@ -227,10 +227,12 @@ class BaseGUI:
         # Reset the dropdown except descriptor and separator
         menu = self.backdrop_menu['menu']
         menu.delete(2, 'end')
+        count = 0
 
         for url in backdrop_urls:
+            count += 1
             menu.add_command(
-                label=url,
+                label=f"({count}) {url}",
                 command=lambda u=url: self.set_active_backdrop(u)
             )
 

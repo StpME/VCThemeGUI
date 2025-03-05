@@ -17,13 +17,20 @@ class Setup:
         Args:
             gui_name (string): The name of the GUI theme being set up.
         """
-        # Create an dark border for labels
-        dark_frame = tk.Frame(self.root, bg="gray")
-        dark_frame.pack(fill="x")
+        # Create an dark border for top/btm and remove left + right edges
+        border_top_frame = tk.Frame(self.root, bg="gray")
+        border_top_frame.pack(fill="x")
 
-        # Create instruction header label frame
-        label_frame = tk.Frame(dark_frame, bg="lightgray")
+        border_btm_frame = tk.Frame(self.root, bg="gray")
+        border_btm_frame.pack(side="bottom", fill="x")
+
+        # Create header label frame
+        label_frame = tk.Frame(border_top_frame, bg="lightgray")
         label_frame.pack(fill="x", pady=2)
+
+        # Backdrop frame for button and entry box
+        btm_frame = tk.Frame(border_btm_frame, bg="lightgray")
+        btm_frame.pack(side="bottom", fill="x", pady=2)
 
         self.header_label = tk.Label(
             label_frame,
@@ -40,16 +47,11 @@ class Setup:
         )
         self.header_label.pack()
 
-        # Backdrop frame for button and entry box
-        btm_frame = tk.Frame(self.root, bg="lightgray",
-                             highlightbackground="gray", highlightthickness=2)
-        btm_frame.pack(side="bottom", fill="x")
-
         # Dropdown menu - Backdrop selector
         self.backdrop_options = tk.StringVar(value="Select Backdrop")
         self.backdrop_menu = tk.OptionMenu(btm_frame, self.backdrop_options,
                                            "Select Below")
-        self.backdrop_menu.pack(side="left", padx=2)
+        self.backdrop_menu.pack(side="left", padx=9)
         self.backdrop_menu['menu'].entryconfig(0, state="disabled")
         self.backdrop_menu['menu'].add_separator()
         self.backdrop_menu.configure(direction="above")
@@ -57,10 +59,10 @@ class Setup:
         self.add_backdrop_btn = tk.Button(btm_frame, text="Add Backdrop",
                                           command=self.add_backdrop_to_css,
                                           bd=3)
-        self.add_backdrop_btn.pack(side="left", padx=5, pady=5)
+        self.add_backdrop_btn.pack(side="left", padx=7, pady=5)
 
         self.backdrop_entry = tk.Entry(btm_frame)
-        self.backdrop_entry.pack(side="left", padx=5, pady=5)
+        self.backdrop_entry.pack(side="left", pady=5)
 
         # Calculate and set the entry box width to 75% of the window width
         def set_entry_width(event=None):
