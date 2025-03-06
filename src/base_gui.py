@@ -321,13 +321,25 @@ class BaseGUI:
     def delete_backdrop(self):
         """
         Delete the selected backdrop from the CSS file.
+        Prevents deletion of last backdrop in file.
         """
         selected_url = self.active_backdrop
 
         if selected_url and selected_url != "Select Backdrop":
+
+            with open(self.css_file_path, "r") as file:
+                css_content = file.read()
+                backdrop_urls = self.extract_backdrops(css_content)
+            if len(backdrop_urls) == 1:
+                confirm = messagebox.showinfo(
+                 "Can't Delete Backdrop",
+                 "You can't delete the last backdrop in the CSS file."
+                )
+                return
             confirm = messagebox.askyesno(
                 "Delete Backdrop",
-                f"Are you sure you want to delete '{selected_url}'?")
+                f"Are you sure you want to delete '{selected_url}'?"
+            )
             if confirm:
                 # Read the CSS file
                 with open(self.css_file_path, "r") as file:
