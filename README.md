@@ -1,4 +1,4 @@
-# VCThemeGUI
+# <a href="https://github.com/StpME/VCThemeGUI" target="_blank">VCThemeGUI</a>
 
 This is a simple GUI for editing the CSS for specifically editing the **backdrop/background** of modified Discord themes. It allows you to set the backdrop of the current theme by selecting an existing or added url to an image (.png, .jpg, .jpeg, .gif) from the dropdown instead of going into the file yourself and manually editing or commenting out images.
 
@@ -41,19 +41,28 @@ Download latest version from **[releases](https://github.com/StpME/VCThemeGUI/re
 ## Updating:
  Within the **File** menu, press **Check for Updates** to fetch and replace the current program with the most recent release.
 
- 
+## Download Issues:
+Browsers and antivirus may flag the program as a virus since it's an exe editing files. If the file download is blocked, try using the installer instead.
+
+Try following these links if you want to fix the blocked download or quarantined files
+
+<a href="https://support.google.com/chrome/answer/6261569?sjid=13080228221221643634-NC" target="_blank">Chrome - Blocked Downloads</a>
+
+<a href="https://support.google.com/chrome/answer/6261569?sjid=13080228221221643634-NC" target="_blank">Restore Quarantined Files in Windows Defender</a>
 
 
+# Credits 
+ VCThemeGUI is a personal passion project, all credits for themes and clients here:
 
-VCThemeGUI is a personal passion project, all credits for themes and clients here:
+# <a href="https://discord.com/download" target="_blank">Discord</a>
+## Themes
+### <a href="https://plusinsta.github.io/discord-plus/" target="_blank">Discord+</a>
+### <a href="https://betterdiscord.app/theme/SoftX" target="_blank">SoftX</a>
+### <a href="https://betterdiscord.app/theme/ClearVision" target="_blank">ClearVision</a>
 
-# [Discord](https://discord.com/download)
-### [Discord+](https://plusinsta.github.io/discord-plus/)
-### [SoftX](https://betterdiscord.app/theme/SoftX)
-### [ClearVision](https://betterdiscord.app/theme/ClearVision)
+## Clients
+### <a href="https://vencord.dev/" target="_blank">Vencord</a>
+### <a href="https://betterdiscord.app/" target="_blank">BetterDiscord</a>
 
-#### ----------------------------------------------------------------------------------------
-### [Vencord](https://vencord.dev/)
-### [BetterDiscord](https://betterdiscord.app/)
 
 ### This project is not affiliated with Discord or discord.com in any way.
