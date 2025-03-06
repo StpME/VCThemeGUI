@@ -68,6 +68,8 @@ class BaseGUI:
         Create the cascading file menu and it's components.
         """
         menubar = tk.Menu(self.root)
+
+        # File menu
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="Open", command=self.open_file)
         filemenu.add_separator()
@@ -82,9 +84,6 @@ class BaseGUI:
                              compound=tk.RIGHT,
                              command=Setup.open_github)
         filemenu.add_separator()
-        filemenu.add_command(label="Restore Last Deleted",
-                             command=self.restore_last)
-        filemenu.add_separator()
         filemenu.add_command(label="Check for Updates",
                              command=self.updater.check_for_updates)
         filemenu.add_separator()
@@ -94,6 +93,15 @@ class BaseGUI:
         filemenu.add_command(label="Exit",
                              command=self.root.quit)
         menubar.add_cascade(label="File", menu=filemenu)
+
+        # Edit menu
+        editmenu = tk.Menu(menubar, tearoff=0)
+        editmenu.add_command(label="Restore Last Deleted (Ctrl+Z)",
+                             command=self.restore_last)
+        editmenu.add_separator()
+        editmenu.add_command(label="Delete Selected (Del)",
+                             command=self.delete_backdrop)
+        menubar.add_cascade(label="Edit", menu=editmenu)
         self.root.config(menu=menubar)
 
     def is_valid_css_file(self, file_path):

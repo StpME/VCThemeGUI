@@ -69,6 +69,7 @@ def main():
         """
         root.destroy()  # Destroy selector window
         new_root = tk.Tk()  # Create new root window for selected GUI
+        new_root.minsize(570, 400)
 
         # Set the new window to center of screen
         width_base = 900
