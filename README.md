@@ -44,10 +44,12 @@ Download latest version from **[releases](https://github.com/StpME/VCThemeGUI/re
 ## Download Issues:
 Browsers and antivirus may flag the program as a virus since it's an exe editing files. If the file download is blocked, try using the installer instead.
 
-Try following these links if you want to fix the blocked download or quarantined files
+Try following these links if you want to fix installation issues.
 
+If browser blocks the download:
 <a href="https://support.google.com/chrome/answer/6261569?sjid=13080228221221643634-NC" target="_blank">Chrome - Blocked Downloads</a>
 
+If antivirus removes the file:
 <a href="https://support.google.com/chrome/answer/6261569?sjid=13080228221221643634-NC" target="_blank">Restore Quarantined Files in Windows Defender</a>
 
 
