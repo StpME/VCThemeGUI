@@ -1,3 +1,5 @@
+import os
+# VCTheme.spec
 # -*- mode: python ; coding: utf-8 -*-
 
 def get_version():
@@ -49,4 +51,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    timestamp=None,
 )
