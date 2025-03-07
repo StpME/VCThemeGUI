@@ -28,7 +28,19 @@ class BackdropManager:
             with open(self.css_file_path, "w") as file:
                 for line in lines:
                     if bg_str in line and "url(" in line:
-                        if active_backdrop in line:
+                        # Extract the URL to compare with active_backdrop
+                        url_start = line.find("url(") + 4
+                        url_end = line.find(")", url_start)
+                        line_url = line[url_start:url_end].strip()
+
+                        # Remove any quotes around the URL for comparison
+                        if line_url.startswith('"') and line_url.endswith('"'):
+                            line_url = line_url[1:-1]
+                        elif (line_url.startswith("'") and
+                              line_url.endswith("'")):
+                            line_url = line_url[1:-1]
+
+                        if active_backdrop == line_url:
                             if self.is_backdrop_commented(line):
                                 # Remove the first /* and the last */
                                 uncomm_line = line.replace("/*",

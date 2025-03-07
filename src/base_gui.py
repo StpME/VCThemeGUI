@@ -220,6 +220,13 @@ class BaseGUI:
                 url_end = line.find(")", url_start)  # Find the closing ")"
                 backdrop_url = line[url_start:url_end].strip()
 
+                # Remove any quotes around the URL
+                if backdrop_url.startswith('"') and backdrop_url.endswith('"'):
+                    backdrop_url = backdrop_url[1:-1]
+                elif (backdrop_url.startswith("'") and
+                      backdrop_url.endswith("'")):
+                    backdrop_url = backdrop_url[1:-1]
+
                 # Add the URL to the list if unique
                 if backdrop_url and backdrop_url not in backdrop_urls:
                     backdrop_urls.append(backdrop_url)
