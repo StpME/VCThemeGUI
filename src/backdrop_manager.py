@@ -1,3 +1,6 @@
+import re
+
+
 class BackdropManager:
     """
     Manages the modification of CSS files to update and check active backdrops.
@@ -12,59 +15,78 @@ class BackdropManager:
         """
         self.css_file_path = css_file_path
 
+
+
+
+
+
+
+
+    
+
+
+
+
     def update_css_file(self, active_backdrop, bg_str):
         """
-        Update the CSS file to select or deselect backdrops.
-
-        Args:
-            active_backdrop (string): The selected backdrop URL.
-            bg_str (string): The theme-specific CSS text used
-            to identify backdrop lines.
+        Final robust solution for backdrop management
         """
-        if active_backdrop:
-            with open(self.css_file_path, "r") as file:
-                lines = file.readlines()
+        if not active_backdrop:
+            return
 
-            with open(self.css_file_path, "w") as file:
-                for line in lines:
-                    if bg_str in line and "url(" in line:
-                        # Extract the URL to compare with active_backdrop
-                        url_start = line.find("url(") + 4
-                        url_end = line.find(")", url_start)
-                        line_url = line[url_start:url_end].strip()
+        with open(self.css_file_path, "r") as file:
+            content = file.read()
 
-                        # Remove any quotes around the URL for comparison
-                        if line_url.startswith('"') and line_url.endswith('"'):
-                            line_url = line_url[1:-1]
-                        elif (line_url.startswith("'") and
-                              line_url.endswith("'")):
-                            line_url = line_url[1:-1]
+        # Unified regex pattern with named groups
+        pattern = re.compile(
+            r'(?P<full_line>'
+            r'(?P<indent>\s*)'
+            r'(?P<comment>/\*)?'
+            r'(?P<prop>{}:\s*url\([\'"]?(?P<url>.*?)[\'"]?\)\s*;)'
+            r'(?P<end_comment>\*/)?'
+            r'(?P<trailing>.*)'
+            r')'.format(re.escape(bg_str)),
+            re.MULTILINE
+        )
 
-                        if active_backdrop == line_url:
-                            if self.is_backdrop_commented(line):
-                                # Remove the first /* and the last */
-                                uncomm_line = line.replace("/*",
-                                                           "", 1).rstrip()
-                                # Find the last occurrence of */ and remove it
-                                last_comment_end = uncomm_line.rfind("*/")
-                                if last_comment_end != -1:
-                                    uncomm_line = uncomm_line[
-                                        :last_comment_end].rstrip()
-                                # Ensure the line ends with a semicolon
-                                # ONLY if it doesn't already
-                                if not uncomm_line.strip().endswith(";"):
-                                    uncomm_line = uncomm_line.rstrip() + ";"
-                                file.write(uncomm_line + "\n")
-                            else:
-                                file.write(line)
-                        else:
-                            # Comment out the other backdrops
-                            if not self.is_backdrop_commented(line):
-                                file.write(f"/*{line.strip()}*/\n")
-                            else:
-                                file.write(line)
-                    else:
-                        file.write(line)
+        # Process matches and track state
+        new_lines = []
+        active_found = False
+
+        for match in pattern.finditer(content):
+            groups = match.groupdict()
+            url = groups['url'].strip('\'"')
+            is_commented = bool(groups['comment'])
+
+            # Check if this is the selected backdrop
+            if url == active_backdrop:
+                if not active_found:
+                    # Uncomment and activate
+                    new_line = f"{groups['indent']}{groups['prop']}{groups['trailing']}"
+                    active_found = True
+                else:
+                    # Comment duplicate entries
+                    new_line = f"{groups['indent']}/*{groups['prop']}*/{groups['trailing']}"
+            else:
+                # Comment other backdrops
+                new_line = f"{groups['indent']}/*{groups['prop']}*/{groups['trailing']}"
+
+            new_lines.append((match.start(), match.end(), new_line))
+
+        # Rebuild content only if we found matches
+        if new_lines:
+            # Replace in reverse order to preserve offsets
+            content_list = list(content)
+            for start, end, replacement in reversed(new_lines):
+                content_list[start:end] = replacement
+
+            # Write back if changes detected
+            new_content = ''.join(content_list)
+            if new_content != content:
+                with open(self.css_file_path, "w") as file:
+                    file.write(new_content)
+        else:
+            print(f"No backdrop lines found for property: {bg_str}")
 
     def is_backdrop_commented(self, line):
         """
