@@ -199,8 +199,16 @@ class ImagePreview:
         img_urls = []
         for line in css_content.split("\n"):
             if theme_format in line and "url(" in line:
-                # Extract the URL from the CSS line
+                # Extract the url from the CSS line
                 url = line.split("url(")[1].split(")")[0]
+
+                # Remove any quotes around the url
+                url = url.strip()
+                if url.startswith('"') and url.endswith('"'):
+                    url = url[1:-1]
+                elif url.startswith("'") and url.endswith("'"):
+                    url = url[1:-1]
+
                 img_urls.append(url)
         return img_urls
 

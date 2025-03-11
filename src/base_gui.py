@@ -57,11 +57,11 @@ class BaseGUI:
         self.last_deleted_url = None
         self.last_deleted_pos_list = []
 
-        # self.status_label = tk.Label(root, text="Ready", fg="grey50")
-        # self.status_label.pack(side="bottom", fill="x")
-
         # Bind Ctrl+Z shortcut for restoring the last deleted backdrop
         self.root.bind("<Control-z>", lambda event: self.restore_last())
+        # Bind Ctrl+T shortcut for anchoring window on top
+        self.root.bind("<Control-t>",
+                       lambda event: Setup.toggle_stay_on_top(self.root))
 
     def setup_menu(self):
         """
@@ -73,7 +73,7 @@ class BaseGUI:
         filemenu = tk.Menu(menubar, tearoff=0)
         filemenu.add_command(label="Open", command=self.open_file)
         filemenu.add_separator()
-        filemenu.add_command(label="Stay on Top", command=lambda:
+        filemenu.add_command(label="Stay on Top (Ctrl+T)", command=lambda:
                              Setup.toggle_stay_on_top(self.root))
         filemenu.add_separator()
         github_img = Image.open(self.file_manager
@@ -219,6 +219,13 @@ class BaseGUI:
                 url_start = line.find("url(") + 4  # After "url(" for img url
                 url_end = line.find(")", url_start)  # Find the closing ")"
                 backdrop_url = line[url_start:url_end].strip()
+
+                # Remove any quotes around the URL
+                if backdrop_url.startswith('"') and backdrop_url.endswith('"'):
+                    backdrop_url = backdrop_url[1:-1]
+                elif (backdrop_url.startswith("'") and
+                      backdrop_url.endswith("'")):
+                    backdrop_url = backdrop_url[1:-1]
 
                 # Add the URL to the list if unique
                 if backdrop_url and backdrop_url not in backdrop_urls:
