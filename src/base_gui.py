@@ -62,6 +62,9 @@ class BaseGUI:
         # Bind Ctrl+T shortcut for anchoring window on top
         self.root.bind("<Control-t>",
                        lambda event: Setup.toggle_stay_on_top(self.root))
+        # Bind Enter shortcut for adding backdrop
+        self.root.bind("<Return>",
+                       lambda event: self.add_backdrop_to_css())
 
     def setup_menu(self):
         """
