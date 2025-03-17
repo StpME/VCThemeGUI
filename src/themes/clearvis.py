@@ -35,6 +35,7 @@ class ClearVisGUI(BaseGUI):
 
         self.setup = Setup
         self.setup.setup_gui(self, self.theme_config[0])
+        self.setup_status_label()
 
         # Create a new frame for the image grid
         self.img_grid_frame = tk.Frame(self.root)

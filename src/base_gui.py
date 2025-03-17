@@ -1,6 +1,7 @@
 import os
 import re
 import tkinter as tk
+import random
 from tkinter import filedialog, messagebox
 from image_preview import ImagePreview
 from PIL import Image, ImageTk
@@ -39,6 +40,14 @@ class BaseGUI:
         self.add_backdrop_btn = None
         self.active_backdrop = None
         self.header_label = None
+
+        # Cycle components
+        self.cycle_interval = None
+        self.cycle_running = False
+        self.after_id = None
+        self.cycle_menu = None
+        self.cycle_status_var = tk.StringVar()
+        self.cycle_status_label = None
 
         # Get current version and set up the updater
         self.current_version = self.file_manager.get_version()
@@ -105,6 +114,36 @@ class BaseGUI:
         editmenu.add_command(label="Delete Selected (Del)",
                              command=self.delete_backdrop)
         menubar.add_cascade(label="Edit", menu=editmenu)
+
+        # Image cycle menu
+        cyclemenu = tk.Menu(menubar, tearoff=0)
+        self.cycle_menu = cyclemenu  # Store reference
+
+        # Add cycle controls
+        cyclemenu.add_command(label="Start Cycling",
+                              command=lambda: self.toggle_cycle())
+        cyclemenu.add_separator()
+
+        # Interval selection submenu
+        intervalmenu = tk.Menu(menubar, tearoff=0)
+        intervalmenu.add_command(label="Every 1 Minute",
+                                 command=lambda: self.set_cycle_interval(60))
+        intervalmenu.add_separator()
+        intervalmenu.add_command(label="Every 5 Minute",
+                                 command=lambda: self.set_cycle_interval(300))
+        intervalmenu.add_separator()
+        intervalmenu.add_command(label="Every 10 Minute",
+                                 command=lambda: self.set_cycle_interval(600))
+        intervalmenu.add_separator()
+        intervalmenu.add_command(label="Every 30 Minute",
+                                 command=lambda: self.set_cycle_interval(1800))
+        intervalmenu.add_separator()
+        intervalmenu.add_command(label="Every 1 Hour",
+                                 command=lambda: self.set_cycle_interval(3600))
+
+        cyclemenu.add_cascade(label="Set Interval", menu=intervalmenu)
+        menubar.add_cascade(label="Image Cycle", menu=cyclemenu)
+
         self.root.config(menu=menubar)
 
     def is_valid_css_file(self, file_path):
@@ -170,10 +209,11 @@ class BaseGUI:
         # Read the CSS file and extract image URLs
         with open(file_path, "r"):
             css_content, img_urls = self.file_manager.extract_urls(file_path)
+            backdrop_urls = []
             if css_content and img_urls:
 
                 # Extract backdrops and populate the dropdown
-                backdrop_urls = self.extract_backdrops(css_content)
+                self.backdrop_urls = self.extract_backdrops(css_content)
 
                 # Update label when a file is loaded
                 self.header_label.config(
@@ -182,7 +222,7 @@ class BaseGUI:
                     font=("Arial", 12, "bold")
                 )
                 self.sub_label.config(
-                    text=f"Loaded {len(backdrop_urls)} backdrops from: "
+                    text=f"Loaded {len(self.backdrop_urls)} backdrops from: "
                     f"{os.path.basename(file_path)}",
                     font=("Arial", 9)
                 )
@@ -194,11 +234,11 @@ class BaseGUI:
                     onclick=self.set_active_backdrop)
 
                 # Check for tuple backdrops in case of light + dark themes
-                if isinstance(backdrop_urls, tuple):
-                    backdrop_urls = backdrop_urls[0] + backdrop_urls[1]
-
-                uniq_list = list(dict.fromkeys(backdrop_urls))
-                self.populate_dropdown(uniq_list)
+                if isinstance(self.backdrop_urls, tuple):
+                    backdrop_urls = (self.backdrop_urls[0] +
+                                     self.backdrop_urls[1])
+                    uniq_list = list(dict.fromkeys(backdrop_urls))
+                    self.populate_dropdown(uniq_list)
 
         return file_path
 
@@ -325,6 +365,11 @@ class BaseGUI:
             )
         self.sub_label.pack()
 
+        self.backdrop_urls.append(link)
+        if hasattr(self, 'current_cycle_order'):
+            self.current_cycle_order.append(link)
+            self.unused_backdrops.append(link)
+
         # Update the dropdown & image previews
         menu = self.backdrop_menu['menu']
         count = menu.index("end")
@@ -408,6 +453,15 @@ class BaseGUI:
                     )
                 self.sub_label.pack()
 
+                if selected_url in self.backdrop_urls:
+                    self.backdrop_urls.remove(selected_url)
+
+                if hasattr(self, 'current_cycle_order'):
+                    if selected_url in self.current_cycle_order:
+                        self.current_cycle_order.remove(selected_url)
+                    if selected_url in self.unused_backdrops:
+                        self.unused_backdrops.remove(selected_url)
+
         else:  # Notify user if no backdrop is currently selected to delete
             messagebox.showwarning("No Backdrop Selected",
                                    "Please select a backdrop to delete.")
@@ -445,6 +499,7 @@ class BaseGUI:
                 if isinstance(backdrop_urls, tuple):  # Handle l+d themes
                     backdrop_urls = backdrop_urls[0] + backdrop_urls[1]
                 uniq_list = list(dict.fromkeys(backdrop_urls))
+                self.backdrop_urls = uniq_list
                 self.populate_dropdown(uniq_list)
 
             # Update the image previews
@@ -487,11 +542,133 @@ class BaseGUI:
                 self.img_preview_instance.img_urls = img_urls
                 self.img_preview_instance.load_images()
 
+    def setup_status_label(self):
+        """
+        Create and position the cycle status label.
+        """
+        self.cycle_status_label = tk.Label(
+            self.root,
+            textvariable=self.cycle_status_var,
+            font=("Arial", 10),
+            fg="gray"
+        )
+        self.cycle_status_label.pack(side=tk.BOTTOM, pady=5)
+        self.update_cycle_display()
+
+    def update_cycle_display(self):
+        """
+        Update the cycle status text.
+        """
+        if self.cycle_running:
+            text = (f"Cycling every {self.cycle_interval//60} minute"
+                    f"{'' if self.cycle_interval//60 == 1 else 's'}")
+        elif self.cycle_interval:
+            text = ("Cycle Stopped (Interval: "
+                    f"{self.cycle_interval//60} minute"
+                    f"{'' if self.cycle_interval//60 == 1 else 's'})")
+        else:
+            text = "No image cycle interval set"
+        self.cycle_status_var.set(text)
+
+    def set_cycle_interval(self, seconds):
+        """
+        Set/update the cycling interval.
+
+        Args:
+            seconds (int): The interval in seconds selected in menu.
+        """
+        self.cycle_interval = seconds
+        self.update_cycle_display()
+        if self.cycle_running:
+            self.stop_cycle()
+            self.start_cycle()
+
+    def toggle_cycle(self):
+        """
+        Start/stop the automatic cycling
+        """
+        if not self.cycle_running:
+            if not self.cycle_interval:
+                messagebox.showwarning(
+                    "No Interval Set",
+                    "Please set a cycle interval first."
+                )
+                return
+            self.start_cycle()
+        else:
+            self.stop_cycle()
+
+    def start_cycle(self):
+        """
+        Starts automatic cycling.
+        """
+        # Check if file loaded
+        if not hasattr(self, 'css_file_path') or not self.css_file_path:
+            messagebox.showwarning("No File Loaded",
+                                   "Please load a CSS file before cycling.")
+            return
+        # Check if enough backdrops to cycle
+        if not hasattr(self, 'backdrop_urls') or len(self.backdrop_urls) < 2:
+            messagebox.showwarning(
+                "Not Enough Backdrops",
+                "Need at least 2 backdrops to cycle between.")
+            return
+
+        # Create a shuffled copy of the backdrop list for this cycle
+        self.current_cycle_order = random.sample(self.backdrop_urls,
+                                                 len(self.backdrop_urls))
+        self.unused_backdrops = self.current_cycle_order.copy()
+
+        # Remove current backdrop if it's in the list
+        if self.active_backdrop in self.unused_backdrops:
+            self.unused_backdrops.remove(self.active_backdrop)
+
+        self.cycle_running = True
+        self.update_cycle_display()
+        self.cycle_menu.entryconfig(0, label="Stop Cycling")
+        self.cycle_next()
+
+    def cycle_next(self):
+        """
+        Switch to next random, non-repeated backdrop.
+        """
+        # print(self.unused_backdrops, "\n")
+        if self.cycle_running and self.cycle_interval:
+            if not self.unused_backdrops:
+                # Reset cycle once all shown
+                self.current_cycle_order = random.sample(
+                    self.backdrop_urls,
+                    len(self.backdrop_urls))
+                self.unused_backdrops = self.current_cycle_order.copy()
+
+            # Get next backdrop
+            new_backdrop = self.unused_backdrops.pop(0)
+            self.set_active_backdrop(new_backdrop)
+
+            # Ready next cycle
+            self.after_id = self.root.after(
+                self.cycle_interval * 1000,  # sec -> ms
+                self.cycle_next
+            )
+
+    def stop_cycle(self):
+        """
+        Stops automatic backdrop cycling and resets
+        remaining backdrops to shuffle.
+        """
+        self.cycle_running = False
+        self.update_cycle_display()
+        if self.after_id:
+            self.root.after_cancel(self.after_id)
+            self.after_id = None
+        self.cycle_menu.entryconfig(0, label="Start Cycling")
+
     def cleanup(self):
         """
         Reset common variables and resources.
         Used for if user wants to return to the GUI selector.
         """
+        self.stop_cycle()
         self.css_file_path = None
         self.backdrop_manager = None
         self.image_preview_instance = None
