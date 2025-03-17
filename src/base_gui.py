@@ -45,7 +45,9 @@ class BaseGUI:
         self.cycle_interval = None
         self.cycle_running = False
         self.after_id = None
-        self.cycle_menu = None  # Add this line
+        self.cycle_menu = None
+        self.cycle_status_var = tk.StringVar()
+        self.cycle_status_label = None
 
         # Get current version and set up the updater
         self.current_version = self.file_manager.get_version()
@@ -125,7 +127,7 @@ class BaseGUI:
         # Interval selection submenu
         intervalmenu = tk.Menu(menubar, tearoff=0)
         intervalmenu.add_command(label="Every 1 Minute",
-                                 command=lambda: self.set_cycle_interval(3))
+                                 command=lambda: self.set_cycle_interval(60))
         intervalmenu.add_separator()
         intervalmenu.add_command(label="Every 5 Minute",
                                  command=lambda: self.set_cycle_interval(300))
@@ -540,14 +542,43 @@ class BaseGUI:
                 self.img_preview_instance.img_urls = img_urls
                 self.img_preview_instance.load_images()
 
+    def setup_status_label(self):
+        """
+        Create and position the cycle status label.
+        """
+        self.cycle_status_label = tk.Label(
+            self.root,
+            textvariable=self.cycle_status_var,
+            font=("Arial", 10),
+            fg="gray"
+        )
+        self.cycle_status_label.pack(side=tk.BOTTOM, pady=5)
+        self.update_cycle_display()
+
+    def update_cycle_display(self):
+        """
+        Update the cycle status text.
+        """
+        if self.cycle_running:
+            text = (f"Cycling every {self.cycle_interval//60} minute"
+                    f"{'' if self.cycle_interval//60 == 1 else 's'}")
+        elif self.cycle_interval:
+            text = ("Cycle Stopped (Interval: "
+                    f"{self.cycle_interval//60} minute"
+                    f"{'' if self.cycle_interval//60 == 1 else 's'})")
+        else:
+            text = "No image cycle interval set"
+        self.cycle_status_var.set(text)
+
     def set_cycle_interval(self, seconds):
         """
-        Set/update the cycling interval
+        Set/update the cycling interval.
 
         Args:
             seconds (int): The interval in seconds selected in menu.
         """
         self.cycle_interval = seconds
+        self.update_cycle_display()
         if self.cycle_running:
             self.stop_cycle()
             self.start_cycle()
@@ -557,6 +588,12 @@ class BaseGUI:
         Start/stop the automatic cycling
         """
         if not self.cycle_running:
+            if not self.cycle_interval:
+                messagebox.showwarning(
+                    "No Interval Set",
+                    "Please set a cycle interval first."
+                )
+                return
             self.start_cycle()
         else:
             self.stop_cycle()
@@ -587,6 +624,7 @@ class BaseGUI:
             self.unused_backdrops.remove(self.active_backdrop)
 
         self.cycle_running = True
+        self.update_cycle_display()
         self.cycle_menu.entryconfig(0, label="Stop Cycling")
         self.cycle_next()
 
@@ -619,6 +657,7 @@ class BaseGUI:
         remaining backdrops to shuffle.
         """
         self.cycle_running = False
+        self.update_cycle_display()
         if self.after_id:
             self.root.after_cancel(self.after_id)
             self.after_id = None
