@@ -51,7 +51,7 @@ If browser blocks the download:
 <a href="https://support.google.com/chrome/answer/6261569?sjid=13080228221221643634-NC" target="_blank">Chrome - Blocked Downloads</a>
 
 If antivirus removes the file:
-<a href="https://support.google.com/chrome/answer/6261569?sjid=13080228221221643634-NC" target="_blank">Restore Quarantined Files in Windows Defender</a>
+<a href="https://learn.microsoft.com/en-us/defender-endpoint/restore-quarantined-files-microsoft-defender-antivirus" target="_blank">Restore Quarantined Files in Windows Defender</a>
 
 
 # Credits 
